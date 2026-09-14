@@ -6,5 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Paciente extends Model
 {
-    //
+    protected $fillable = [
+        'nombre',
+        'apellido',
+        'dni',
+        'fecha_nacimiento',
+        'telefono',
+        'email',
+        'obra_social',
+        'observaciones',
+    ];
 }
