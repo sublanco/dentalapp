@@ -10,3 +10,8 @@ Route::get('/user', function (Request $request) {
 
 
 Route::get('/pacientes', [PacienteController::class, 'index']);
+Route::post('/pacientes', [PacienteController::class, 'store']);
+Route::get('/pacientes/{id}', [PacienteController::class, 'show']);
+Route::put('/pacientes/{id}', [PacienteController::class, 'update']);
+Route::delete('/pacientes/{id}', [PacienteController::class, 'destroy']);
+
