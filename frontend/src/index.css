@@ -109,3 +109,25 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+.tabla-pacientes {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.tabla-pacientes th,
+.tabla-pacientes td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.tabla-pacientes th {
+  background-color: #f2f2f2;
+}
+
+.tabla-pacientes button {
+  margin-right: 5px;
+  padding: 6px 10px;
+  cursor: pointer;
+}
