@@ -1,8 +1,10 @@
+
 <?php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Paciente extends Model
 {
@@ -16,4 +18,10 @@ class Paciente extends Model
         'obra_social',
         'observaciones',
     ];
+
+    // Relación con la historia clínica
+    public function historiaClinica(): HasOne
+    {
+        return $this->hasOne(HistoriaClinica::class);
+    }
 }
