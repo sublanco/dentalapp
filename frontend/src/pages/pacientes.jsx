@@ -1,7 +1,9 @@
 
 import { useState, useEffect } from "react"
+import { useNavigate } from "react-router"
 
 function Pacientes() {
+  const navigate = useNavigate()
   // ==============================
   // ESTADOS
   // ==============================
@@ -127,6 +129,13 @@ function Pacientes() {
   function verFicha(paciente) {
     setPacienteSeleccionado(paciente)
     setMostrarFormulario(false)
+  }
+  // ==============================
+  // VER HISTORIA CLÍNICA
+  // ==============================
+
+  function verHistoriaClinica(paciente) {
+    navigate(`/historia-clinica/${paciente.id}`)
   }
 
   // ==============================
@@ -430,6 +439,13 @@ function Pacientes() {
             onClick={() => editarPaciente(pacienteSeleccionado)}
           >
             Editar paciente
+          </button>
+          {" "}
+
+          <button
+            onClick={() => verHistoriaClinica(paciente)}
+          >
+            Ver Historia Clínica
           </button>
 
           {" "}

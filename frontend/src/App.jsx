@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router";
 import Pacientes from "./pages/pacientes";
+import HistoriaClinica from "./pages/HistoriaClinica";
 
 function Inicio() {
   return (
@@ -28,6 +29,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/pacientes" element={<Pacientes />} />
+        <Route path="/historias-clinicas/:id" element={<HistoriaClinica />} />
       </Routes>
     </BrowserRouter>
   );
