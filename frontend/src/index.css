@@ -131,3 +131,107 @@ code {
   padding: 6px 10px;
   cursor: pointer;
 }
+/* =========================================
+   HISTORIA CLÍNICA
+========================================= */
+
+.historia-contenedor {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.historia-header {
+  margin-bottom: 25px;
+}
+
+.historia-header h1 {
+  margin-bottom: 5px;
+}
+
+.historia-header p {
+  color: #666;
+}
+
+.historia-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.historia-card h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.datos-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.datos-grid strong {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.datos-grid p {
+  margin: 0;
+}
+
+.dato-medico {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  gap: 20px;
+}
+
+.dato-medico span {
+  font-weight: bold;
+}
+
+.dato-adicional {
+  background: #f7f7f7;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+}
+
+.dato-adicional p {
+  margin-bottom: 0;
+  margin-top: 5px;
+}
+
+.historia-registro {
+  margin-top: 25px;
+  padding: 15px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* =========================================
+   DISEÑO PARA CELULAR
+========================================= */
+
+@media (max-width: 700px) {
+  .historia-contenedor {
+    padding: 10px;
+  }
+
+  .datos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dato-medico {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}

@@ -69,7 +69,9 @@ class HistoriaClinicaController extends Controller
      */
    public function show($id)
 {
-    $historia = HistoriaClinica::with('paciente')->findOrFail($id);
+    $historia = HistoriaClinica::with('paciente')
+        ->where('paciente_id', $id)
+        ->firstOrFail();
 
     return response()->json($historia);
 }

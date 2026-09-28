@@ -1,52 +1,52 @@
-
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 
 function Pacientes() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   // ==============================
   // ESTADOS
   // ==============================
 
-  const [pacientes, setPacientes] = useState([])
-  const [busqueda, setBusqueda] = useState("")
+  const [pacientes, setPacientes] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
 
-  const [mostrarFormulario, setMostrarFormulario] = useState(false)
-  const [pacienteEditando, setPacienteEditando] = useState(null)
-  const [pacienteSeleccionado, setPacienteSeleccionado] = useState(null)
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [pacienteEditando, setPacienteEditando] = useState(null);
+  const [pacienteSeleccionado, setPacienteSeleccionado] = useState(null);
 
   // Datos del paciente
-  const [nombre, setNombre] = useState("")
-  const [apellido, setApellido] = useState("")
-  const [dni, setDni] = useState("")
-  const [telefono, setTelefono] = useState("")
-  const [email, setEmail] = useState("")
-  const [fechaNacimiento, setFechaNacimiento] = useState("")
-  const [obraSocial, setObraSocial] = useState("")
-  const [observaciones, setObservaciones] = useState("")
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [dni, setDni] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [email, setEmail] = useState("");
+  const [fechaNacimiento, setFechaNacimiento] = useState("");
+  const [obraSocial, setObraSocial] = useState("");
+  const [observaciones, setObservaciones] = useState("");
 
   // ==============================
   // CARGAR PACIENTES
   // ==============================
 
   useEffect(() => {
-    obtenerPacientes()
-  }, [])
+    obtenerPacientes();
+  }, []);
 
   async function obtenerPacientes() {
     try {
       const respuesta = await fetch(
         "http://127.0.0.1:8000/api/pacientes"
-      )
+      );
 
       if (!respuesta.ok) {
-        throw new Error("No se pudieron obtener los pacientes")
+        throw new Error("No se pudieron obtener los pacientes");
       }
 
-      const datos = await respuesta.json()
-      setPacientes(datos)
+      const datos = await respuesta.json();
+      setPacientes(datos);
     } catch (error) {
-      console.error("Error al obtener pacientes:", error)
+      console.error("Error al obtener pacientes:", error);
     }
   }
 
@@ -55,33 +55,33 @@ function Pacientes() {
   // ==============================
 
   const pacientesFiltrados = pacientes.filter((paciente) => {
-    const texto = busqueda.toLowerCase().trim()
+    const texto = busqueda.toLowerCase().trim();
 
     const nombreCompleto =
-      `${paciente.nombre || ""} ${paciente.apellido || ""}`.toLowerCase()
+      `${paciente.nombre || ""} ${paciente.apellido || ""}`.toLowerCase();
 
-    const dniPaciente = String(paciente.dni || "")
+    const dniPaciente = String(paciente.dni || "");
 
     return (
       nombreCompleto.includes(texto) ||
       dniPaciente.includes(texto)
-    )
-  })
+    );
+  });
 
   // ==============================
   // LIMPIAR FORMULARIO
   // ==============================
 
   function limpiarFormulario() {
-    setNombre("")
-    setApellido("")
-    setDni("")
-    setTelefono("")
-    setEmail("")
-    setFechaNacimiento("")
-    setObraSocial("")
-    setObservaciones("")
-    setPacienteEditando(null)
+    setNombre("");
+    setApellido("");
+    setDni("");
+    setTelefono("");
+    setEmail("");
+    setFechaNacimiento("");
+    setObraSocial("");
+    setObservaciones("");
+    setPacienteEditando(null);
   }
 
   // ==============================
@@ -89,9 +89,9 @@ function Pacientes() {
   // ==============================
 
   function nuevoPaciente() {
-    limpiarFormulario()
-    setPacienteSeleccionado(null)
-    setMostrarFormulario(true)
+    limpiarFormulario();
+    setPacienteSeleccionado(null);
+    setMostrarFormulario(true);
   }
 
   // ==============================
@@ -99,8 +99,8 @@ function Pacientes() {
   // ==============================
 
   function cancelarFormulario() {
-    limpiarFormulario()
-    setMostrarFormulario(false)
+    limpiarFormulario();
+    setMostrarFormulario(false);
   }
 
   // ==============================
@@ -108,18 +108,18 @@ function Pacientes() {
   // ==============================
 
   function editarPaciente(paciente) {
-    setPacienteEditando(paciente)
+    setPacienteEditando(paciente);
 
-    setNombre(paciente.nombre || "")
-    setApellido(paciente.apellido || "")
-    setDni(paciente.dni || "")
-    setTelefono(paciente.telefono || "")
-    setEmail(paciente.email || "")
-    setFechaNacimiento(paciente.fecha_nacimiento || "")
-    setObraSocial(paciente.obra_social || "")
-    setObservaciones(paciente.observaciones || "")
+    setNombre(paciente.nombre || "");
+    setApellido(paciente.apellido || "");
+    setDni(paciente.dni || "");
+    setTelefono(paciente.telefono || "");
+    setEmail(paciente.email || "");
+    setFechaNacimiento(paciente.fecha_nacimiento || "");
+    setObraSocial(paciente.obra_social || "");
+    setObservaciones(paciente.observaciones || "");
 
-    setMostrarFormulario(true)
+    setMostrarFormulario(true);
   }
 
   // ==============================
@@ -127,15 +127,16 @@ function Pacientes() {
   // ==============================
 
   function verFicha(paciente) {
-    setPacienteSeleccionado(paciente)
-    setMostrarFormulario(false)
+    setPacienteSeleccionado(paciente);
+    setMostrarFormulario(false);
   }
+
   // ==============================
   // VER HISTORIA CLÍNICA
   // ==============================
 
   function verHistoriaClinica(paciente) {
-    navigate(`/historia-clinica/${paciente.id}`)
+    navigate(`/historias-clinicas/${paciente.id}`);
   }
 
   // ==============================
@@ -143,7 +144,7 @@ function Pacientes() {
   // ==============================
 
   async function guardarPaciente(e) {
-    e.preventDefault()
+    e.preventDefault();
 
     const datosPaciente = {
       nombre,
@@ -154,12 +155,12 @@ function Pacientes() {
       fecha_nacimiento: fechaNacimiento || null,
       obra_social: obraSocial,
       observaciones,
-    }
+    };
 
     try {
       const url = pacienteEditando
         ? `http://127.0.0.1:8000/api/pacientes/${pacienteEditando.id}`
-        : "http://127.0.0.1:8000/api/pacientes"
+        : "http://127.0.0.1:8000/api/pacientes";
 
       const respuesta = await fetch(url, {
         method: pacienteEditando ? "PUT" : "POST",
@@ -168,30 +169,30 @@ function Pacientes() {
           Accept: "application/json",
         },
         body: JSON.stringify(datosPaciente),
-      })
+      });
 
-      const datos = await respuesta.json()
+      const datos = await respuesta.json();
 
       if (!respuesta.ok) {
-        console.error("Error del servidor:", datos)
-        alert("No se pudo guardar el paciente")
-        return
+        console.error("Error del servidor:", datos);
+        alert("No se pudo guardar el paciente");
+        return;
       }
 
       alert(
         pacienteEditando
           ? "Paciente actualizado correctamente"
           : "Paciente guardado correctamente"
-      )
+      );
 
-      limpiarFormulario()
-      setMostrarFormulario(false)
-      setPacienteSeleccionado(null)
+      limpiarFormulario();
+      setMostrarFormulario(false);
+      setPacienteSeleccionado(null);
 
-      await obtenerPacientes()
+      await obtenerPacientes();
     } catch (error) {
-      console.error("Error al guardar paciente:", error)
-      alert("No se pudo conectar con el servidor")
+      console.error("Error al guardar paciente:", error);
+      alert("No se pudo conectar con el servidor");
     }
   }
 
@@ -202,9 +203,9 @@ function Pacientes() {
   async function eliminarPaciente(id) {
     const confirmar = window.confirm(
       "¿Está seguro de que desea eliminar este paciente?"
-    )
+    );
 
-    if (!confirmar) return
+    if (!confirmar) return;
 
     try {
       const respuesta = await fetch(
@@ -215,25 +216,25 @@ function Pacientes() {
             Accept: "application/json",
           },
         }
-      )
+      );
 
       if (!respuesta.ok) {
-        const datos = await respuesta.json()
-        console.error("Error del servidor:", datos)
-        alert("No se pudo eliminar el paciente")
-        return
+        const datos = await respuesta.json();
+        console.error("Error del servidor:", datos);
+        alert("No se pudo eliminar el paciente");
+        return;
       }
 
       if (pacienteSeleccionado?.id === id) {
-        setPacienteSeleccionado(null)
+        setPacienteSeleccionado(null);
       }
 
-      alert("Paciente eliminado correctamente")
+      alert("Paciente eliminado correctamente");
 
-      await obtenerPacientes()
+      await obtenerPacientes();
     } catch (error) {
-      console.error("Error al eliminar paciente:", error)
-      alert("No se pudo conectar con el servidor")
+      console.error("Error al eliminar paciente:", error);
+      alert("No se pudo conectar con el servidor");
     }
   }
 
@@ -254,9 +255,7 @@ function Pacientes() {
         </button>
       )}
 
-      {/* ==============================
-          FORMULARIO DE PACIENTE
-      ============================== */}
+      {/* FORMULARIO DE PACIENTE */}
 
       {mostrarFormulario && (
         <div>
@@ -390,9 +389,7 @@ function Pacientes() {
         </div>
       )}
 
-      {/* ==============================
-          FICHA DEL PACIENTE
-      ============================== */}
+      {/* FICHA DEL PACIENTE */}
 
       {pacienteSeleccionado && !mostrarFormulario && (
         <div>
@@ -440,10 +437,11 @@ function Pacientes() {
           >
             Editar paciente
           </button>
+
           {" "}
 
           <button
-            onClick={() => verHistoriaClinica(paciente)}
+            onClick={() => verHistoriaClinica(pacienteSeleccionado)}
           >
             Ver Historia Clínica
           </button>
@@ -458,9 +456,7 @@ function Pacientes() {
         </div>
       )}
 
-      {/* ==============================
-          BUSCADOR
-      ============================== */}
+      {/* BUSCADOR */}
 
       <hr />
 
@@ -477,9 +473,7 @@ function Pacientes() {
         }}
       />
 
-      {/* ==============================
-          LISTADO DE PACIENTES
-      ============================== */}
+      {/* LISTADO DE PACIENTES */}
 
       <h2>Listado de pacientes</h2>
 
@@ -524,6 +518,16 @@ function Pacientes() {
 
                   {" "}
 
+                  {/* BOTÓN HISTORIA CLÍNICA */}
+
+                  <button
+                    onClick={() => verHistoriaClinica(paciente)}
+                  >
+                    🦷 Historia clínica
+                  </button>
+
+                  {" "}
+
                   <button
                     onClick={() => eliminarPaciente(paciente.id)}
                   >
@@ -536,7 +540,7 @@ function Pacientes() {
         </table>
       )}
     </div>
-  )
+  );
 }
 
-export default Pacientes
+export default Pacientes;
