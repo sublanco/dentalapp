@@ -10,11 +10,12 @@ class OdontogramaPieza extends Model
     protected $table = 'odontograma_piezas';
 
     protected $fillable = [
-        'paciente_id',
-        'numero_pieza',
-        'estado',
-        'observaciones',
-    ];
+    'paciente_id',
+    'numero_pieza',
+    'cara',
+    'estado',
+    'observaciones',
+];
 
     /**
      * Una pieza del odontograma pertenece a un paciente.

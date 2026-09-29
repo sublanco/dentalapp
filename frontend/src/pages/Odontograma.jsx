@@ -1,9 +1,54 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useParams } from "react-router"
+
 
 function Odontograma() {
+  const { id } = useParams()
   const [estadoSeleccionado, setEstadoSeleccionado] = useState("caries")
+  const [tipoDenticion, setTipoDenticion] = useState("permanente")
 
   const [piezas, setPiezas] = useState({})
+  useEffect(() => {
+  const cargarOdontograma = async () => {
+    try {
+      const respuesta = await fetch(
+        `http://127.0.0.1:8000/api/pacientes/${id}/odontograma`
+      )
+
+      if (!respuesta.ok) {
+        throw new Error("No se pudo cargar el odontograma")
+      }
+
+      const datos = await respuesta.json()
+
+      const piezasCargadas = {}
+
+      datos.forEach((pieza) => {
+        if (!piezasCargadas[pieza.numero_pieza]) {
+          piezasCargadas[pieza.numero_pieza] = {}
+        }
+
+        piezasCargadas[pieza.numero_pieza][pieza.cara] =
+          pieza.estado
+      })
+
+      setPiezas(piezasCargadas)
+
+      console.log(
+        "Odontograma cargado:",
+        piezasCargadas
+      )
+
+    } catch (error) {
+      console.error(
+        "Error al cargar odontograma:",
+        error
+      )
+    }
+  }
+
+  cargarOdontograma()
+}, [id])
 
   const dientesSuperiores = [
     18, 17, 16, 15, 14, 13, 12, 11,
@@ -13,6 +58,15 @@ function Odontograma() {
   const dientesInferiores = [
     48, 47, 46, 45, 44, 43, 42, 41,
     31, 32, 33, 34, 35, 36, 37, 38
+  ]
+  const dientesTemporariosSuperiores = [
+    55, 54, 53, 52, 51,
+    61, 62, 63, 64, 65
+  ]
+
+  const dientesTemporariosInferiores = [
+    85, 84, 83, 82, 81,
+    71, 72, 73, 74, 75
   ]
 
   const estados = [
@@ -53,7 +107,7 @@ function Odontograma() {
     return "white"
   }
 
-  const seleccionarCara = (numero, cara) => {
+  const seleccionarCara = async (numero, cara) => {
     console.log("Pieza:", numero)
     console.log("Cara:", cara)
     console.log("Estado:", estadoSeleccionado)
@@ -65,6 +119,35 @@ function Odontograma() {
         [cara]: estadoSeleccionado
       }
     }))
+
+    try {
+      const respuesta = await fetch(
+        `http://127.0.0.1:8000/api/pacientes/${id}/odontograma`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            numero_pieza: String(numero),
+            cara: cara,
+            estado: estadoSeleccionado
+          })
+        }
+      )
+
+      if (!respuesta.ok) {
+        throw new Error("No se pudo guardar la pieza")
+      }
+
+      const datos = await respuesta.json()
+
+      console.log("Guardado correctamente:", datos)
+
+    } catch (error) {
+      console.error("Error al guardar odontograma:", error)
+    }
   }
 
   const renderCara = (numero, cara, clase) => {
@@ -140,6 +223,18 @@ function Odontograma() {
       <h2>Odontograma</h2>
 
       <div className="odontograma-menu">
+        <label htmlFor="denticion">
+          Tipo de dentición:
+        </label>
+
+        <select
+          id="denticion"
+          value={tipoDenticion}
+          onChange={(e) => setTipoDenticion(e.target.value)}
+        >
+          <option value="permanente">Permanente</option>
+          <option value="temporaria">Temporaria (niños)</option>
+        </select>
 
         <label htmlFor="estado">
           Seleccionar estado:
@@ -167,17 +262,22 @@ function Odontograma() {
       <div className="odontograma">
 
         <div className="fila-dientes">
-          {dientesSuperiores.map(renderDiente)}
+          {(tipoDenticion === "permanente"
+            ? dientesSuperiores
+            : dientesTemporariosSuperiores
+          ).map(renderDiente)}
         </div>
 
         <div className="separador"></div>
 
         <div className="fila-dientes">
-          {dientesInferiores.map(renderDiente)}
+          {(tipoDenticion === "permanente"
+            ? dientesInferiores
+            : dientesTemporariosInferiores
+          ).map(renderDiente)}
         </div>
 
       </div>
-
       <div className="leyenda">
 
         <h3>Estados</h3>

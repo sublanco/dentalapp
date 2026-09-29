@@ -146,6 +146,12 @@ function Pacientes() {
   function verConsultas(paciente) {
     navigate(`/pacientes/${paciente.id}/consultas`);
   }
+  // ==============================
+  // VER ODONTOGRAMA
+  // ==============================
+  const verOdontograma = (paciente) => {
+  navigate(`/pacientes/${paciente.id}/odontograma`)
+}
 
   // ==============================
   // GUARDAR PACIENTE
@@ -440,7 +446,7 @@ function Pacientes() {
             {pacienteSeleccionado.observaciones || "Sin observaciones"}
           </p>
 
-         
+
           {" "}
 
           <button
@@ -525,6 +531,13 @@ function Pacientes() {
                     onClick={() => verConsultas(paciente)}
                   >
                     📋 Consultas
+                  </button>
+                  {" "}
+
+                  <button
+                    onClick={() => verOdontograma(paciente)}
+                  >
+                    🦷 Odontograma
                   </button>
 
                   {" "}

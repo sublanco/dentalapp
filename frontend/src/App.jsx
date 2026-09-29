@@ -34,20 +34,11 @@ function App() {
 
         <Route path="/pacientes" element={<Pacientes />} />
 
-        <Route
-          path="/historias-clinicas/:id"
-          element={<HistoriaClinica />}
-        />
+        <Route path="/historias-clinicas/:id" element={<HistoriaClinica />} />
 
-        <Route
-          path="/pacientes/:id/consultas"
-          element={<Consultas />}
-        />
+        <Route path="/pacientes/:id/consultas" element={<Consultas />} />
 
-        <Route
-          path="/odontograma"
-          element={<Odontograma />}
-        />
+        <Route path="/pacientes/:id/odontograma" element={<Odontograma />} />
       </Routes>
     </BrowserRouter>
   );

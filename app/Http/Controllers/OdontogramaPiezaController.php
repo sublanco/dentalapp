@@ -25,21 +25,23 @@ class OdontogramaPiezaController extends Controller
     public function store(Request $request, $pacienteId)
     {
         $datos = $request->validate([
-            'numero_pieza' => 'required|string|max:3',
-            'estado' => 'required|string|max:255',
-            'observaciones' => 'nullable|string',
-        ]);
+    'numero_pieza' => 'required|string|max:3',
+    'cara' => 'required|string|max:20',
+    'estado' => 'required|string|max:255',
+    'observaciones' => 'nullable|string',
+]);
 
         $pieza = OdontogramaPieza::updateOrCreate(
-            [
-                'paciente_id' => $pacienteId,
-                'numero_pieza' => $datos['numero_pieza'],
-            ],
-            [
-                'estado' => $datos['estado'],
-                'observaciones' => $datos['observaciones'] ?? null,
-            ]
-        );
+    [
+        'paciente_id' => $pacienteId,
+        'numero_pieza' => $datos['numero_pieza'],
+        'cara' => $datos['cara'],
+    ],
+    [
+        'estado' => $datos['estado'],
+        'observaciones' => $datos['observaciones'] ?? null,
+    ]
+);
 
         return response()->json($pieza, 201);
     }
