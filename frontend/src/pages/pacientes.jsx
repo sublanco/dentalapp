@@ -140,6 +140,14 @@ function Pacientes() {
   }
 
   // ==============================
+  // VER CONSULTAS
+  // ==============================
+
+  function verConsultas(paciente) {
+    navigate(`/pacientes/${paciente.id}/consultas`);
+  }
+
+  // ==============================
   // GUARDAR PACIENTE
   // ==============================
 
@@ -432,20 +440,7 @@ function Pacientes() {
             {pacienteSeleccionado.observaciones || "Sin observaciones"}
           </p>
 
-          <button
-            onClick={() => editarPaciente(pacienteSeleccionado)}
-          >
-            Editar paciente
-          </button>
-
-          {" "}
-
-          <button
-            onClick={() => verHistoriaClinica(pacienteSeleccionado)}
-          >
-            Ver Historia Clínica
-          </button>
-
+         
           {" "}
 
           <button
@@ -518,12 +513,18 @@ function Pacientes() {
 
                   {" "}
 
-                  {/* BOTÓN HISTORIA CLÍNICA */}
-
                   <button
                     onClick={() => verHistoriaClinica(paciente)}
                   >
                     🦷 Historia clínica
+                  </button>
+
+                  {" "}
+
+                  <button
+                    onClick={() => verConsultas(paciente)}
+                  >
+                    📋 Consultas
                   </button>
 
                   {" "}

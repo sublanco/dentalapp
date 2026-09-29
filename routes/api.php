@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\HistoriaClinicaController;
+use App\Http\Controllers\ConsultaController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -17,4 +18,5 @@ Route::put('/pacientes/{id}', [PacienteController::class, 'update']);
 Route::delete('/pacientes/{id}', [PacienteController::class, 'destroy']);
 
 Route::apiResource('historias-clinicas', HistoriaClinicaController::class);
+Route::apiResource('consultas', ConsultaController::class);
 

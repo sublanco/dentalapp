@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router";
 import Pacientes from "./pages/pacientes";
 import HistoriaClinica from "./pages/HistoriaClinica";
+import Consultas from "./pages/Consultas";
 
 function Inicio() {
   return (
@@ -30,6 +31,8 @@ function App() {
         <Route path="/" element={<Inicio />} />
         <Route path="/pacientes" element={<Pacientes />} />
         <Route path="/historias-clinicas/:id" element={<HistoriaClinica />} />
+        <Route path="/pacientes/:id/consultas" element={<Consultas />}
+/>
       </Routes>
     </BrowserRouter>
   );

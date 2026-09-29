@@ -235,3 +235,54 @@ code {
     gap: 5px;
   }
 }
+/* ==========================================
+   BOTONES DE CONSULTAS
+   ========================================== */
+
+.acciones-consulta {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.boton-editar {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.boton-eliminar {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.boton-editar:hover,
+.boton-eliminar:hover {
+  opacity: 0.85;
+}
+/* ==========================================
+   TARJETAS DE CONSULTAS
+   ========================================== */
+
+.consulta-card {
+  background: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.consulta-card h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.consulta-card .dato-medico {
+  margin-bottom: 15px;
+}
