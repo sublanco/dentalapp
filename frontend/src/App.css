@@ -235,3 +235,11 @@ body {
 .leyenda-color.implante {
   background: #b197fc;
 }
+.datos-paciente-odontograma {
+  margin: 15px 0 20px 0;
+  padding: 12px 18px;
+  background-color: #f5f5f5;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}

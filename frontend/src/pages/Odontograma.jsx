@@ -3,52 +3,84 @@ import { useParams } from "react-router"
 
 
 function Odontograma() {
+
   const { id } = useParams()
   const [estadoSeleccionado, setEstadoSeleccionado] = useState("caries")
   const [tipoDenticion, setTipoDenticion] = useState("permanente")
 
   const [piezas, setPiezas] = useState({})
+  const [paciente, setPaciente] = useState(null)
+
   useEffect(() => {
-  const cargarOdontograma = async () => {
-    try {
-      const respuesta = await fetch(
-        `http://127.0.0.1:8000/api/pacientes/${id}/odontograma`
-      )
+    const cargarOdontograma = async () => {
+      try {
+        const respuesta = await fetch(
+          `http://127.0.0.1:8000/api/pacientes/${id}/odontograma`
+        )
 
-      if (!respuesta.ok) {
-        throw new Error("No se pudo cargar el odontograma")
-      }
-
-      const datos = await respuesta.json()
-
-      const piezasCargadas = {}
-
-      datos.forEach((pieza) => {
-        if (!piezasCargadas[pieza.numero_pieza]) {
-          piezasCargadas[pieza.numero_pieza] = {}
+        if (!respuesta.ok) {
+          throw new Error("No se pudo cargar el odontograma")
         }
 
-        piezasCargadas[pieza.numero_pieza][pieza.cara] =
-          pieza.estado
-      })
+        const datos = await respuesta.json()
 
-      setPiezas(piezasCargadas)
+        const piezasCargadas = {}
 
-      console.log(
-        "Odontograma cargado:",
-        piezasCargadas
-      )
+        datos.forEach((pieza) => {
+          if (!piezasCargadas[pieza.numero_pieza]) {
+            piezasCargadas[pieza.numero_pieza] = {}
+          }
 
-    } catch (error) {
-      console.error(
-        "Error al cargar odontograma:",
-        error
-      )
+          piezasCargadas[pieza.numero_pieza][pieza.cara] = {
+            id: pieza.id,
+            estado: pieza.estado
+          }
+        })
+
+        setPiezas(piezasCargadas)
+
+        console.log(
+          "Odontograma cargado:",
+          piezasCargadas
+        )
+
+      } catch (error) {
+        console.error(
+          "Error al cargar odontograma:",
+          error
+        )
+      }
     }
-  }
 
-  cargarOdontograma()
-}, [id])
+    cargarOdontograma()
+  }, [id])
+  useEffect(() => {
+    const cargarPaciente = async () => {
+      try {
+        const respuesta = await fetch(
+          `http://127.0.0.1:8000/api/pacientes/${id}`
+        )
+
+        if (!respuesta.ok) {
+          throw new Error("No se pudo cargar el paciente")
+        }
+
+        const datos = await respuesta.json()
+
+        setPaciente(datos)
+
+        console.log("Paciente cargado:", datos)
+
+      } catch (error) {
+        console.error(
+          "Error al cargar paciente:",
+          error
+        )
+      }
+    }
+
+    cargarPaciente()
+  }, [id])
 
   const dientesSuperiores = [
     18, 17, 16, 15, 14, 13, 12, 11,
@@ -149,17 +181,77 @@ function Odontograma() {
       console.error("Error al guardar odontograma:", error)
     }
   }
+  const eliminarCara = async (numero, cara, piezaId) => {
+    try {
+      const respuesta = await fetch(
+        `http://127.0.0.1:8000/api/odontograma-piezas/${piezaId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Accept": "application/json"
+          }
+        }
+      )
+
+      if (!respuesta.ok) {
+        throw new Error("No se pudo eliminar la marca")
+      }
+
+      setPiezas((previas) => {
+        const nuevasPiezas = { ...previas }
+
+        if (nuevasPiezas[numero]) {
+          const nuevasCaras = {
+            ...nuevasPiezas[numero]
+          }
+
+          delete nuevasCaras[cara]
+
+          if (Object.keys(nuevasCaras).length === 0) {
+            delete nuevasPiezas[numero]
+          } else {
+            nuevasPiezas[numero] = nuevasCaras
+          }
+        }
+
+        return nuevasPiezas
+      })
+
+      console.log("Marca eliminada correctamente")
+
+    } catch (error) {
+      console.error(
+        "Error al eliminar marca:",
+        error
+      )
+    }
+  }
+
 
   const renderCara = (numero, cara, clase) => {
-    const estado = piezas[numero]?.[cara]
+    const estado = piezas[numero]?.[cara]?.estado
 
     return (
       <span
         className={`cara-diente ${clase}`}
+
         onClick={(e) => {
           e.stopPropagation()
           seleccionarCara(numero, cara)
         }}
+        onContextMenu={(e) => {
+          e.preventDefault()
+          e.stopPropagation()
+
+          if (piezas[numero]?.[cara]) {
+            eliminarCara(
+              numero,
+              cara,
+              piezas[numero][cara].id
+            )
+          }
+        }}
+
         style={{
           backgroundColor: estado
             ? obtenerColor(estado)
@@ -221,6 +313,16 @@ function Odontograma() {
     <div className="odontograma-container">
 
       <h2>Odontograma</h2>
+
+      {paciente && (
+        <div className="datos-paciente-odontograma">
+          <strong>Paciente:</strong>{" "}
+          {paciente.nombre} {paciente.apellido}
+          {" | "}
+          <strong>DNI:</strong>{" "}
+          {paciente.dni}
+        </div>
+      )}
 
       <div className="odontograma-menu">
         <label htmlFor="denticion">
