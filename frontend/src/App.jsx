@@ -1,7 +1,9 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router";
+
 import Pacientes from "./pages/pacientes";
 import HistoriaClinica from "./pages/HistoriaClinica";
 import Consultas from "./pages/Consultas";
+import Odontograma from "./pages/Odontograma";
 
 function Inicio() {
   return (
@@ -29,10 +31,23 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Inicio />} />
+
         <Route path="/pacientes" element={<Pacientes />} />
-        <Route path="/historias-clinicas/:id" element={<HistoriaClinica />} />
-        <Route path="/pacientes/:id/consultas" element={<Consultas />}
-/>
+
+        <Route
+          path="/historias-clinicas/:id"
+          element={<HistoriaClinica />}
+        />
+
+        <Route
+          path="/pacientes/:id/consultas"
+          element={<Consultas />}
+        />
+
+        <Route
+          path="/odontograma"
+          element={<Odontograma />}
+        />
       </Routes>
     </BrowserRouter>
   );
