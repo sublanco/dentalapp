@@ -351,3 +351,19 @@ body {
   }
 
 }
+/* =========================================
+   NÚMERO DE PIEZA DENTAL
+   ========================================= */
+
+.diente-con-numero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.numero-diente {
+  margin-top: 5px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #333;
+}

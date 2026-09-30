@@ -258,7 +258,7 @@ function Odontograma() {
             : "white"
         }}
       >
-        {cara === "central" ? numero : ""}
+        { ""}
       </span>
     )
   }
@@ -267,43 +267,53 @@ function Odontograma() {
     return (
       <div
         key={numero}
-        className="diente"
-        title={`Pieza ${numero}`}
+        className="diente-con-numero"
       >
 
-        {renderCara(
-          numero,
-          "superior",
-          "arriba"
-        )}
-
-        <div className="fila-central">
+        <div
+          className="diente"
+          title={`Pieza ${numero}`}
+        >
 
           {renderCara(
             numero,
-            "izquierda",
-            "izquierda"
+            "superior",
+            "arriba"
           )}
 
-          {renderCara(
-            numero,
-            "central",
-            "centro"
-          )}
+          <div className="fila-central">
+
+            {renderCara(
+              numero,
+              "izquierda",
+              "izquierda"
+            )}
+
+            {renderCara(
+              numero,
+              "central",
+              "centro"
+            )}
+
+            {renderCara(
+              numero,
+              "derecha",
+              "derecha"
+            )}
+
+          </div>
 
           {renderCara(
             numero,
-            "derecha",
-            "derecha"
+            "inferior",
+            "abajo"
           )}
 
         </div>
 
-        {renderCara(
-          numero,
-          "inferior",
-          "abajo"
-        )}
+        <div className="numero-diente">
+          {numero}
+        </div>
 
       </div>
     )

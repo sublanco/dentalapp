@@ -81,7 +81,7 @@ class HistoriaClinicaController extends Controller
      */
     public function update(Request $request, $id)
 {
-    $historiaClinica = HistoriaClinica::findOrFail($id);
+    $historiaClinica = HistoriaClinica::where('paciente_id', $id)->firstOrFail();
 
     $datos = $request->validate([
         'paciente_id' => 'sometimes|exists:pacientes,id',
