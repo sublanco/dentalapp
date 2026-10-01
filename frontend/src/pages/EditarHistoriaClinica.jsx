@@ -216,452 +216,623 @@ function EditarHistoriaClinica() {
 
   if (cargando) {
     return (
-      <div style={{ padding: "30px" }}>
-        <h2>Editando Historia Clínica 🦷</h2>
+      <div className="editar-historia-cargando">
+        <div className="editar-cargando-icono">🦷</div>
+
+        <h2>Editando Historia Clínica</h2>
+
         <p>Cargando información...</p>
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        maxWidth: "1000px",
-        margin: "30px auto",
-        padding: "25px",
-      }}
-    >
-      <h1>Editar Historia Clínica 🦷</h1>
+    <div className="editar-historia-page">
 
-      <form onSubmit={guardarCambios}>
+      {/* ENCABEZADO */}
+      <div className="pagina-encabezado">
 
-        {/* MÉDICO */}
-        <section
-          style={{
-            marginTop: "25px",
-            padding: "20px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Datos médicos</h2>
+        <div className="titulo-con-icono">
 
-          <label>Médico de cabecera</label>
-          <input
-            type="text"
-            name="medico_cabecera"
-            value={formulario.medico_cabecera}
-            onChange={manejarCambio}
-            style={{ width: "100%", marginBottom: "15px" }}
-          />
+          <div className="pagina-icono">
+            ✏️
+          </div>
 
-          <label>Teléfono del médico</label>
-          <input
-            type="text"
-            name="telefono_medico"
-            value={formulario.telefono_medico}
-            onChange={manejarCambio}
-            style={{ width: "100%", marginBottom: "15px" }}
-          />
+          <div>
+            <h1>
+              Editar Historia Clínica
+            </h1>
 
-          <label>
-            <input
-              type="checkbox"
-              name="servicio_urgencia"
-              checked={formulario.servicio_urgencia}
-              onChange={manejarCambio}
-            />
-            {" "}¿Tiene servicio de urgencia?
-          </label>
+            <p>
+              Actualizá la información clínica del paciente
+            </p>
+          </div>
 
-          {formulario.servicio_urgencia && (
-            <input
-              type="text"
-              name="servicio_urgencia_cual"
-              placeholder="¿Cuál?"
-              value={formulario.servicio_urgencia_cual}
-              onChange={manejarCambio}
-              style={{ width: "100%", marginTop: "10px" }}
-            />
-          )}
+        </div>
+
+      </div>
+
+
+      <form
+        className="formulario-historia"
+        onSubmit={guardarCambios}
+      >
+
+        {/* DATOS MÉDICOS */}
+        <section className="editar-historia-card">
+
+          <div className="editar-card-titulo">
+            <span className="editar-seccion-icono">
+              🩺
+            </span>
+
+            <h2>
+              Datos médicos
+            </h2>
+          </div>
+
+
+          <div className="editar-form-grid">
+
+            <div className="campo-historia">
+
+              <label>
+                Médico de cabecera
+              </label>
+
+              <input
+                type="text"
+                name="medico_cabecera"
+                value={formulario.medico_cabecera}
+                onChange={manejarCambio}
+              />
+
+            </div>
+
+
+            <div className="campo-historia">
+
+              <label>
+                Teléfono del médico
+              </label>
+
+              <input
+                type="text"
+                name="telefono_medico"
+                value={formulario.telefono_medico}
+                onChange={manejarCambio}
+              />
+
+            </div>
+
+          </div>
+
+
+          <div className="preguntas-historia">
+
+            <label className="check-historia">
+
+              <input
+                type="checkbox"
+                name="servicio_urgencia"
+                checked={formulario.servicio_urgencia}
+                onChange={manejarCambio}
+              />
+
+              <span>
+                ¿Tiene servicio de urgencia?
+              </span>
+
+            </label>
+
+
+            {formulario.servicio_urgencia && (
+              <input
+                className="input-condicional"
+                type="text"
+                name="servicio_urgencia_cual"
+                placeholder="¿Cuál?"
+                value={formulario.servicio_urgencia_cual}
+                onChange={manejarCambio}
+              />
+            )}
+
+          </div>
+
         </section>
+
 
         {/* ANTECEDENTES */}
-        <section
-          style={{
-            marginTop: "20px",
-            padding: "20px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Antecedentes</h2>
+        <section className="editar-historia-card">
 
-          <label>
-            <input
-              type="checkbox"
-              name="hospitalizacion"
-              checked={formulario.hospitalizacion}
-              onChange={manejarCambio}
-            />
-            {" "}¿Fue hospitalizado?
-          </label>
+          <div className="editar-card-titulo">
+            <span className="editar-seccion-icono">
+              📋
+            </span>
 
-          {formulario.hospitalizacion && (
-            <input
-              type="text"
-              name="hospitalizacion_motivo"
-              placeholder="Motivo de hospitalización"
-              value={formulario.hospitalizacion_motivo}
-              onChange={manejarCambio}
-              style={{ width: "100%", marginTop: "10px" }}
-            />
-          )}
+            <h2>
+              Antecedentes
+            </h2>
+          </div>
 
-          <br />
-          <br />
 
-          <label>
-            <input
-              type="checkbox"
-              name="tratamiento_medico"
-              checked={formulario.tratamiento_medico}
-              onChange={manejarCambio}
-            />
-            {" "}¿Está realizando algún tratamiento médico?
-          </label>
+          <div className="preguntas-historia">
 
-          {formulario.tratamiento_medico && (
-            <input
-              type="text"
-              name="tratamiento_medico_cual"
-              placeholder="¿Cuál?"
-              value={formulario.tratamiento_medico_cual}
-              onChange={manejarCambio}
-              style={{ width: "100%", marginTop: "10px" }}
-            />
-          )}
+            <label className="check-historia">
 
-          <br />
-          <br />
+              <input
+                type="checkbox"
+                name="hospitalizacion"
+                checked={formulario.hospitalizacion}
+                onChange={manejarCambio}
+              />
 
-          <label>
-            <input
-              type="checkbox"
-              name="alergias_medicamentos"
-              checked={formulario.alergias_medicamentos}
-              onChange={manejarCambio}
-            />
-            {" "}¿Tiene alergias a medicamentos?
-          </label>
+              <span>
+                ¿Fue hospitalizado?
+              </span>
 
-          {formulario.alergias_medicamentos && (
-            <input
-              type="text"
-              name="alergias_cuales"
-              placeholder="¿Cuáles?"
-              value={formulario.alergias_cuales}
-              onChange={manejarCambio}
-              style={{ width: "100%", marginTop: "10px" }}
-            />
-          )}
+            </label>
 
-          <br />
-          <br />
 
-          <label>
-            <input
-              type="checkbox"
-              name="sangrado_excesivo"
-              checked={formulario.sangrado_excesivo}
-              onChange={manejarCambio}
-            />
-            {" "}¿Tiene antecedentes de sangrado excesivo?
-          </label>
+            {formulario.hospitalizacion && (
+              <input
+                className="input-condicional"
+                type="text"
+                name="hospitalizacion_motivo"
+                placeholder="Motivo de hospitalización"
+                value={formulario.hospitalizacion_motivo}
+                onChange={manejarCambio}
+              />
+            )}
+
+
+            <label className="check-historia">
+
+              <input
+                type="checkbox"
+                name="tratamiento_medico"
+                checked={formulario.tratamiento_medico}
+                onChange={manejarCambio}
+              />
+
+              <span>
+                ¿Está realizando algún tratamiento médico?
+              </span>
+
+            </label>
+
+
+            {formulario.tratamiento_medico && (
+              <input
+                className="input-condicional"
+                type="text"
+                name="tratamiento_medico_cual"
+                placeholder="¿Cuál?"
+                value={formulario.tratamiento_medico_cual}
+                onChange={manejarCambio}
+              />
+            )}
+
+
+            <label className="check-historia">
+
+              <input
+                type="checkbox"
+                name="alergias_medicamentos"
+                checked={formulario.alergias_medicamentos}
+                onChange={manejarCambio}
+              />
+
+              <span>
+                ¿Tiene alergias a medicamentos?
+              </span>
+
+            </label>
+
+
+            {formulario.alergias_medicamentos && (
+              <input
+                className="input-condicional"
+                type="text"
+                name="alergias_cuales"
+                placeholder="¿Cuáles?"
+                value={formulario.alergias_cuales}
+                onChange={manejarCambio}
+              />
+            )}
+
+
+            <label className="check-historia">
+
+              <input
+                type="checkbox"
+                name="sangrado_excesivo"
+                checked={formulario.sangrado_excesivo}
+                onChange={manejarCambio}
+              />
+
+              <span>
+                ¿Tiene antecedentes de sangrado excesivo?
+              </span>
+
+            </label>
+
+          </div>
+
         </section>
+
 
         {/* AFECCIONES */}
-        <section
-          style={{
-            marginTop: "20px",
-            padding: "20px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Afecciones</h2>
+        <section className="editar-historia-card">
 
-          <textarea
-            name="afecciones"
-            value={formulario.afecciones}
-            onChange={manejarCambio}
-            placeholder="Ejemplo: Diabetes, hipertensión, asma"
-            rows="4"
-            style={{ width: "100%" }}
-          />
+          <div className="editar-card-titulo">
+            <span className="editar-seccion-icono">
+              🩹
+            </span>
+
+            <h2>
+              Afecciones
+            </h2>
+          </div>
+
+
+          <div className="campo-historia">
+
+            <label>
+              Afecciones o enfermedades
+            </label>
+
+            <textarea
+              name="afecciones"
+              value={formulario.afecciones}
+              onChange={manejarCambio}
+              placeholder="Ejemplo: Diabetes, hipertensión, asma"
+              rows="4"
+            />
+
+            <small>
+              Si hay varias, separalas con comas.
+            </small>
+
+          </div>
+
         </section>
+
 
         {/* MEDICAMENTOS */}
-        <section
-          style={{
-            marginTop: "20px",
-            padding: "20px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Medicamentos</h2>
+        <section className="editar-historia-card">
 
-          <label>
-            <input
-              type="checkbox"
-              name="toma_medicamentos"
-              checked={formulario.toma_medicamentos}
-              onChange={manejarCambio}
-            />
-            {" "}¿Toma medicamentos?
-          </label>
+          <div className="editar-card-titulo">
+            <span className="editar-seccion-icono">
+              💊
+            </span>
 
-          {formulario.toma_medicamentos && (
-            <textarea
-              name="medicamentos_cuales"
-              value={formulario.medicamentos_cuales}
-              onChange={manejarCambio}
-              placeholder="Indique cuáles"
-              rows="3"
-              style={{
-                width: "100%",
-                marginTop: "10px",
-              }}
-            />
-          )}
+            <h2>
+              Medicamentos
+            </h2>
+          </div>
+
+
+          <div className="preguntas-historia">
+
+            <label className="check-historia">
+
+              <input
+                type="checkbox"
+                name="toma_medicamentos"
+                checked={formulario.toma_medicamentos}
+                onChange={manejarCambio}
+              />
+
+              <span>
+                ¿Toma medicamentos?
+              </span>
+
+            </label>
+
+
+            {formulario.toma_medicamentos && (
+              <textarea
+                className="textarea-condicional"
+                name="medicamentos_cuales"
+                value={formulario.medicamentos_cuales}
+                onChange={manejarCambio}
+                placeholder="Indique cuáles"
+                rows="3"
+              />
+            )}
+
+          </div>
+
         </section>
+
 
         {/* HÁBITOS */}
-        <section
-          style={{
-            marginTop: "20px",
-            padding: "20px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Hábitos</h2>
+        <section className="editar-historia-card">
 
-          <label>
-            <input
-              type="checkbox"
-              name="cansancio_al_caminar"
-              checked={formulario.cansancio_al_caminar}
-              onChange={manejarCambio}
-            />
-            {" "}¿Tiene cansancio al caminar?
-          </label>
+          <div className="editar-card-titulo">
+            <span className="editar-seccion-icono">
+              🌿
+            </span>
 
-          <br />
-          <br />
+            <h2>
+              Hábitos
+            </h2>
+          </div>
 
-          <label>
-            <input
-              type="checkbox"
-              name="fuma"
-              checked={formulario.fuma}
-              onChange={manejarCambio}
-            />
-            {" "}¿Fuma?
-          </label>
 
-          {formulario.fuma && (
-            <input
-              type="text"
-              name="cantidad_tabaco"
-              placeholder="Cantidad de cigarrillos"
-              value={formulario.cantidad_tabaco}
-              onChange={manejarCambio}
-              style={{
-                width: "100%",
-                marginTop: "10px",
-              }}
-            />
-          )}
+          <div className="preguntas-historia">
 
-          <br />
-          <br />
+            <label className="check-historia">
 
-          <label>
-            <input
-              type="checkbox"
-              name="bebe_alcohol"
-              checked={formulario.bebe_alcohol}
-              onChange={manejarCambio}
-            />
-            {" "}¿Consume alcohol?
-          </label>
+              <input
+                type="checkbox"
+                name="cansancio_al_caminar"
+                checked={formulario.cansancio_al_caminar}
+                onChange={manejarCambio}
+              />
 
-          {formulario.bebe_alcohol && (
-            <input
-              type="text"
-              name="cantidad_alcohol"
-              placeholder="Cantidad / frecuencia"
-              value={formulario.cantidad_alcohol}
-              onChange={manejarCambio}
-              style={{
-                width: "100%",
-                marginTop: "10px",
-              }}
-            />
-          )}
+              <span>
+                ¿Tiene cansancio al caminar?
+              </span>
+
+            </label>
+
+
+            <label className="check-historia">
+
+              <input
+                type="checkbox"
+                name="fuma"
+                checked={formulario.fuma}
+                onChange={manejarCambio}
+              />
+
+              <span>
+                ¿Fuma?
+              </span>
+
+            </label>
+
+
+            {formulario.fuma && (
+              <input
+                className="input-condicional"
+                type="text"
+                name="cantidad_tabaco"
+                placeholder="Cantidad de cigarrillos"
+                value={formulario.cantidad_tabaco}
+                onChange={manejarCambio}
+              />
+            )}
+
+
+            <label className="check-historia">
+
+              <input
+                type="checkbox"
+                name="bebe_alcohol"
+                checked={formulario.bebe_alcohol}
+                onChange={manejarCambio}
+              />
+
+              <span>
+                ¿Consume alcohol?
+              </span>
+
+            </label>
+
+
+            {formulario.bebe_alcohol && (
+              <input
+                className="input-condicional"
+                type="text"
+                name="cantidad_alcohol"
+                placeholder="Cantidad / frecuencia"
+                value={formulario.cantidad_alcohol}
+                onChange={manejarCambio}
+              />
+            )}
+
+          </div>
+
         </section>
+
 
         {/* EMBARAZO */}
-        <section
-          style={{
-            marginTop: "20px",
-            padding: "20px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Embarazo</h2>
+        <section className="editar-historia-card">
 
-          <label>
-            <input
-              type="checkbox"
-              name="embarazo"
-              checked={formulario.embarazo}
-              onChange={manejarCambio}
-            />
-            {" "}¿Está embarazada?
-          </label>
+          <div className="editar-card-titulo">
+            <span className="editar-seccion-icono">
+              🤰
+            </span>
 
-          {formulario.embarazo && (
-            <input
-              type="text"
-              name="embarazo_tiempo"
-              placeholder="Tiempo de embarazo"
-              value={formulario.embarazo_tiempo}
-              onChange={manejarCambio}
-              style={{
-                width: "100%",
-                marginTop: "10px",
-              }}
-            />
-          )}
+            <h2>
+              Embarazo
+            </h2>
+          </div>
+
+
+          <div className="preguntas-historia">
+
+            <label className="check-historia">
+
+              <input
+                type="checkbox"
+                name="embarazo"
+                checked={formulario.embarazo}
+                onChange={manejarCambio}
+              />
+
+              <span>
+                ¿Está embarazada?
+              </span>
+
+            </label>
+
+
+            {formulario.embarazo && (
+              <input
+                className="input-condicional"
+                type="text"
+                name="embarazo_tiempo"
+                placeholder="Tiempo de embarazo"
+                value={formulario.embarazo_tiempo}
+                onChange={manejarCambio}
+              />
+            )}
+
+          </div>
+
         </section>
 
-        {/* RADIACIÓN */}
-        <section
-          style={{
-            marginTop: "20px",
-            padding: "20px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Radiación</h2>
 
-          <label>
+        {/* RADIACIÓN */}
+        <section className="editar-historia-card">
+
+          <div className="editar-card-titulo">
+            <span className="editar-seccion-icono">
+              ☢️
+            </span>
+
+            <h2>
+              Radiación
+            </h2>
+          </div>
+
+
+          <label className="check-historia">
+
             <input
               type="checkbox"
               name="radiacion"
               checked={formulario.radiacion}
               onChange={manejarCambio}
             />
-            {" "}¿Estuvo expuesto/a a radiación?
+
+            <span>
+              ¿Estuvo expuesto/a a radiación?
+            </span>
+
           </label>
+
         </section>
+
 
         {/* OTROS DATOS */}
-        <section
-          style={{
-            marginTop: "20px",
-            padding: "20px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Otros datos</h2>
+        <section className="editar-historia-card">
 
-          <textarea
-            name="otros_datos"
-            value={formulario.otros_datos}
-            onChange={manejarCambio}
-            rows="4"
-            style={{ width: "100%" }}
-            placeholder="Otros datos importantes"
-          />
+          <div className="editar-card-titulo">
+            <span className="editar-seccion-icono">
+              📝
+            </span>
+
+            <h2>
+              Otros datos
+            </h2>
+          </div>
+
+
+          <div className="campo-historia">
+
+            <label>
+              Información adicional
+            </label>
+
+            <textarea
+              name="otros_datos"
+              value={formulario.otros_datos}
+              onChange={manejarCambio}
+              rows="4"
+              placeholder="Otros datos importantes"
+            />
+
+          </div>
+
         </section>
+
 
         {/* INFORME MÉDICO */}
-        <section
-          style={{
-            marginTop: "20px",
-            padding: "20px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "10px",
-          }}
-        >
-          <h2>Informe médico</h2>
+        <section className="editar-historia-card">
 
-          <label>
-            <input
-              type="checkbox"
-              name="informe_medico"
-              checked={formulario.informe_medico}
-              onChange={manejarCambio}
-            />
-            {" "}¿Presenta informe médico?
-          </label>
+          <div className="editar-card-titulo">
+            <span className="editar-seccion-icono">
+              📄
+            </span>
 
-          <br />
-          <br />
+            <h2>
+              Informe médico
+            </h2>
+          </div>
 
-          <textarea
-            name="observaciones"
-            value={formulario.observaciones}
-            onChange={manejarCambio}
-            rows="4"
-            style={{ width: "100%" }}
-            placeholder="Observaciones"
-          />
+
+          <div className="preguntas-historia">
+
+            <label className="check-historia">
+
+              <input
+                type="checkbox"
+                name="informe_medico"
+                checked={formulario.informe_medico}
+                onChange={manejarCambio}
+              />
+
+              <span>
+                ¿Presenta informe médico?
+              </span>
+
+            </label>
+
+
+            <div className="campo-historia">
+
+              <label>
+                Observaciones
+              </label>
+
+              <textarea
+                name="observaciones"
+                value={formulario.observaciones}
+                onChange={manejarCambio}
+                rows="4"
+                placeholder="Observaciones"
+              />
+
+            </div>
+
+          </div>
+
         </section>
 
+
         {/* BOTONES */}
-        <div style={{ marginTop: "30px" }}>
+        <div className="editar-historia-acciones">
+
           <button
             type="submit"
             disabled={guardando}
-            style={{
-              padding: "12px 25px",
-              backgroundColor: "#198754",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-              marginRight: "10px",
-            }}
+            className="btn-editar-guardar"
           >
-            {guardando ? "Guardando..." : "💾 Guardar cambios"}
+            {guardando
+              ? "Guardando..."
+              : "💾 Guardar cambios"}
           </button>
+
 
           <button
             type="button"
             onClick={() =>
               navigate(`/historias-clinicas/${id}`)
             }
-            style={{
-              padding: "12px 25px",
-              backgroundColor: "#6c757d",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              cursor: "pointer",
-            }}
+            className="btn-editar-cancelar"
           >
-            Cancelar
+            ← Cancelar
           </button>
+
         </div>
+
       </form>
+
     </div>
   );
 }

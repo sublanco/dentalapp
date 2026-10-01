@@ -2,448 +2,658 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
 function HistoriaClinica() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+const { id } = useParams();
+const navigate = useNavigate();
 
-  const [historia, setHistoria] = useState(null);
-  const [cargando, setCargando] = useState(true);
-  const [noExiste, setNoExiste] = useState(false);
-  const [error, setError] = useState("");
+const [historia, setHistoria] = useState(null);
+const [cargando, setCargando] = useState(true);
+const [noExiste, setNoExiste] = useState(false);
+const [error, setError] = useState("");
 
-  useEffect(() => {
-    obtenerHistoria();
-  }, [id]);
+useEffect(() => {
+obtenerHistoria();
+}, [id]);
 
-  async function obtenerHistoria() {
-    try {
-      setCargando(true);
-      setError("");
-      setNoExiste(false);
+async function obtenerHistoria() {
+try {
+setCargando(true);
+setError("");
+setNoExiste(false);
 
-      console.log("ID DEL PACIENTE EN HISTORIA CLÍNICA:", id);
 
-      const respuesta = await fetch(
-        `http://127.0.0.1:8000/api/historias-clinicas/${id}`
-      );
+  console.log("ID DEL PACIENTE EN HISTORIA CLÍNICA:", id);
 
-      // El paciente existe pero todavía no tiene historia clínica
-      if (respuesta.status === 404) {
-        setNoExiste(true);
-        return;
-      }
+  const respuesta = await fetch(
+    `http://127.0.0.1:8000/api/historias-clinicas/${id}`
+  );
 
-      if (!respuesta.ok) {
-        throw new Error("No se pudo obtener la historia clínica");
-      }
-
-      const datos = await respuesta.json();
-
-      setHistoria(datos);
-    } catch (error) {
-      console.error(error);
-      setError("No se pudo cargar la historia clínica");
-    } finally {
-      setCargando(false);
-    }
+  if (respuesta.status === 404) {
+    setNoExiste(true);
+    return;
   }
 
-  function mostrarSiNo(valor) {
-    return valor === 1 || valor === true ? "Sí" : "No";
+  if (!respuesta.ok) {
+    throw new Error("No se pudo obtener la historia clínica");
   }
 
-  if (cargando) {
-    return (
-      <div style={{ padding: "30px" }}>
-        <h2>Historia Clínica 🦷</h2>
-        <p>Cargando...</p>
-      </div>
-    );
-  }
+  const datos = await respuesta.json();
 
-  // No existe historia clínica para este paciente
-  if (noExiste) {
-    return (
-      <div style={{ padding: "30px", textAlign: "center" }}>
-        <h2>Historia Clínica 🦷</h2>
+  setHistoria(datos);
+} catch (error) {
+  console.error(error);
+  setError("No se pudo cargar la historia clínica");
+} finally {
+  setCargando(false);
+}
 
-        <div
-          style={{
-            maxWidth: "600px",
-            margin: "40px auto",
-            padding: "30px",
-            backgroundColor: "#f8f9fa",
-            borderRadius: "12px",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-          }}
-        >
-          <h3>Este paciente todavía no tiene historia clínica.</h3>
 
-          <p>
-            Podés crear la historia clínica para este paciente desde aquí.
-          </p>
+}
 
-          <button
-            onClick={() =>
-              navigate(`/historias-clinicas/${id}/crear`)
-            }
-            style={{
-              marginTop: "20px",
-              padding: "12px 20px",
-              border: "none",
-              borderRadius: "8px",
-              backgroundColor: "#198754",
-              color: "white",
-              fontSize: "16px",
-              cursor: "pointer",
-            }}
-          >
-            ➕ Crear historia clínica
-          </button>
+function mostrarSiNo(valor) {
+return valor === 1 || valor === true ? "Sí" : "No";
+}
 
-          <br />
+if (cargando) {
+return ( <div className="historia-page"> <div className="historia-cargando"> <div className="historia-cargando-icono">🦷</div> <h2>Historia Clínica</h2> <p>Cargando información...</p> </div> </div>
+);
+}
 
-          <button
-            onClick={() => navigate("/pacientes")}
-            style={{
-              marginTop: "15px",
-              padding: "10px 18px",
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              backgroundColor: "white",
-              cursor: "pointer",
-            }}
-          >
-            ← Volver a pacientes
-          </button>
+if (noExiste) {
+return ( <div className="historia-page">
+
+
+    <div className="pagina-encabezado">
+      <div className="titulo-con-icono">
+        <div className="pagina-icono">📋</div>
+
+        <div>
+          <h1>Historia Clínica</h1>
+          <p>Información clínica del paciente</p>
         </div>
       </div>
-    );
-  }
+    </div>
 
-  if (error) {
-    return (
-      <div style={{ padding: "30px" }}>
-        <h2>Historia Clínica 🦷</h2>
-        <p style={{ color: "red" }}>{error}</p>
+    <div className="historia-vacia">
+
+      <div className="historia-vacia-icono">
+        📋
       </div>
-    );
-  }
 
-  if (!historia) {
-    return null;
-  }
+      <h2>
+        Este paciente todavía no tiene historia clínica
+      </h2>
 
-  return (
-    <div
-      style={{
-        maxWidth: "1000px",
-        margin: "30px auto",
-        padding: "25px",
-      }}
-    >
-      <h1>Historia Clínica 🦷</h1>
+      <p>
+        Podés crear la historia clínica para este paciente
+        desde aquí.
+      </p>
 
-      {/* DATOS DEL PACIENTE */}
-      <section
-        style={{
-          marginTop: "25px",
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Datos del paciente</h2>
+      <div className="historia-acciones">
 
-        {historia.paciente && (
-          <>
-            <p>
-              <strong>Nombre:</strong>{" "}
-              {historia.paciente.nombre} {historia.paciente.apellido}
-            </p>
+        <button
+          className="btn-historia btn-crear-historia"
+          onClick={() =>
+            navigate(`/historias-clinicas/${id}/crear`)
+          }
+        >
+          ➕ Crear historia clínica
+        </button>
 
-            <p>
-              <strong>DNI:</strong> {historia.paciente.dni}
-            </p>
+        <button
+          className="btn-historia btn-volver-historia"
+          onClick={() => navigate("/pacientes")}
+        >
+          ← Volver a pacientes
+        </button>
 
-            <p>
-              <strong>Teléfono:</strong>{" "}
-              {historia.paciente.telefono || "No informado"}
-            </p>
+      </div>
 
-            <p>
-              <strong>Email:</strong>{" "}
-              {historia.paciente.email || "No informado"}
-            </p>
-          </>
-        )}
-      </section>
+    </div>
 
-      {/* MÉDICO */}
-      <section
-        style={{
-          marginTop: "20px",
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Datos médicos</h2>
+  </div>
+);
 
-        <p>
-          <strong>Médico de cabecera:</strong>{" "}
-          {historia.medico_cabecera || "No informado"}
-        </p>
 
-        <p>
-          <strong>Teléfono del médico:</strong>{" "}
-          {historia.telefono_medico || "No informado"}
-        </p>
+}
 
-        <p>
-          <strong>Servicio de urgencia:</strong>{" "}
-          {mostrarSiNo(historia.servicio_urgencia)}
-        </p>
+if (error) {
+return ( <div className="historia-page">
 
-        {historia.servicio_urgencia_cual && (
-          <p>
-            <strong>Cuál:</strong> {historia.servicio_urgencia_cual}
-          </p>
-        )}
-      </section>
 
-      {/* ANTECEDENTES */}
-      <section
-        style={{
-          marginTop: "20px",
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Antecedentes</h2>
+    <div className="pagina-encabezado">
+      <div className="titulo-con-icono">
+        <div className="pagina-icono">📋</div>
 
-        <p>
-          <strong>Hospitalización:</strong>{" "}
-          {mostrarSiNo(historia.hospitalizacion)}
-        </p>
+        <div>
+          <h1>Historia Clínica</h1>
+          <p>Información clínica del paciente</p>
+        </div>
+      </div>
+    </div>
 
-        {historia.hospitalizacion_motivo && (
-          <p>
-            <strong>Motivo:</strong>{" "}
-            {historia.hospitalizacion_motivo}
-          </p>
-        )}
+    <div className="historia-error">
+      <div className="historia-error-icono">⚠️</div>
 
-        <p>
-          <strong>Tratamiento médico:</strong>{" "}
-          {mostrarSiNo(historia.tratamiento_medico)}
-        </p>
+      <h2>Ocurrió un problema</h2>
 
-        {historia.tratamiento_medico_cual && (
-          <p>
-            <strong>Cuál:</strong>{" "}
-            {historia.tratamiento_medico_cual}
-          </p>
-        )}
-
-        <p>
-          <strong>Alergias a medicamentos:</strong>{" "}
-          {mostrarSiNo(historia.alergias_medicamentos)}
-        </p>
-
-        {historia.alergias_cuales && (
-          <p>
-            <strong>Cuáles:</strong>{" "}
-            {historia.alergias_cuales}
-          </p>
-        )}
-
-        <p>
-          <strong>Sangrado excesivo:</strong>{" "}
-          {mostrarSiNo(historia.sangrado_excesivo)}
-        </p>
-      </section>
-
-      {/* AFECCIONES */}
-      <section
-        style={{
-          marginTop: "20px",
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Afecciones</h2>
-
-        <p>
-          <strong>Afecciones:</strong>{" "}
-          {Array.isArray(historia.afecciones)
-            ? historia.afecciones.join(", ")
-            : historia.afecciones || "Ninguna"}
-        </p>
-      </section>
-
-      {/* MEDICAMENTOS */}
-      <section
-        style={{
-          marginTop: "20px",
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Medicamentos</h2>
-
-        <p>
-          <strong>Toma medicamentos:</strong>{" "}
-          {mostrarSiNo(historia.toma_medicamentos)}
-        </p>
-
-        {historia.medicamentos_cuales && (
-          <p>
-            <strong>Cuáles:</strong>{" "}
-            {historia.medicamentos_cuales}
-          </p>
-        )}
-      </section>
-
-      {/* HÁBITOS */}
-      <section
-        style={{
-          marginTop: "20px",
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Hábitos</h2>
-
-        <p>
-          <strong>Cansancio al caminar:</strong>{" "}
-          {mostrarSiNo(historia.cansancio_al_caminar)}
-        </p>
-
-        <p>
-          <strong>Fuma:</strong>{" "}
-          {mostrarSiNo(historia.fuma)}
-        </p>
-
-        {historia.cantidad_tabaco && (
-          <p>
-            <strong>Cantidad de tabaco:</strong>{" "}
-            {historia.cantidad_tabaco}
-          </p>
-        )}
-
-        <p>
-          <strong>Bebe alcohol:</strong>{" "}
-          {mostrarSiNo(historia.bebe_alcohol)}
-        </p>
-
-        {historia.cantidad_alcohol && (
-          <p>
-            <strong>Cantidad de alcohol:</strong>{" "}
-            {historia.cantidad_alcohol}
-          </p>
-        )}
-      </section>
-
-      {/* EMBARAZO */}
-      <section
-        style={{
-          marginTop: "20px",
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Embarazo</h2>
-
-        <p>
-          <strong>Embarazo:</strong>{" "}
-          {mostrarSiNo(historia.embarazo)}
-        </p>
-
-        {historia.embarazo_tiempo && (
-          <p>
-            <strong>Tiempo:</strong>{" "}
-            {historia.embarazo_tiempo}
-          </p>
-        )}
-      </section>
-
-      {/* RADIACIÓN */}
-      <section
-        style={{
-          marginTop: "20px",
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Radiación</h2>
-
-        <p>
-          <strong>Radiación:</strong>{" "}
-          {mostrarSiNo(historia.radiacion)}
-        </p>
-      </section>
-
-      {/* INFORME MÉDICO */}
-      <section
-        style={{
-          marginTop: "20px",
-          padding: "20px",
-          backgroundColor: "#f8f9fa",
-          borderRadius: "10px",
-        }}
-      >
-        <h2>Informe médico</h2>
-
-        <p>
-          <strong>Informe médico:</strong>{" "}
-          {mostrarSiNo(historia.informe_medico)}
-        </p>
-
-        <p>
-          <strong>Observaciones:</strong>{" "}
-          {historia.observaciones || "Sin observaciones"}
-        </p>
-      </section>
-      <button
-        onClick={() =>
-          navigate(`/historias-clinicas/${id}/editar`)
-        }
-        style={{
-          marginTop: "30px",
-          marginRight: "10px",
-          padding: "12px 20px",
-          border: "none",
-          borderRadius: "8px",
-          backgroundColor: "#0d6efd",
-          color: "white",
-          cursor: "pointer",
-        }}
-      >
-        ✏️ Editar historia clínica
-      </button>
+      <p>{error}</p>
 
       <button
+        className="btn-historia btn-volver-historia"
         onClick={() => navigate("/pacientes")}
-        style={{
-          marginTop: "30px",
-          padding: "12px 20px",
-          border: "none",
-          borderRadius: "8px",
-          backgroundColor: "#6c757d",
-          color: "white",
-          cursor: "pointer",
-        }}
       >
         ← Volver a pacientes
       </button>
     </div>
-  );
+
+  </div>
+);
+
+
+}
+
+if (!historia) {
+return null;
+}
+
+return ( <div className="historia-page">
+
+```
+  {/* ENCABEZADO */}
+
+  <div className="pagina-encabezado">
+
+    <div className="titulo-con-icono">
+
+      <div className="pagina-icono">
+        📋
+      </div>
+
+      <div>
+        <h1>Historia Clínica</h1>
+
+        <p>
+          Información clínica del paciente
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  {/* DATOS DEL PACIENTE */}
+
+  <section className="historia-card paciente-historia-card">
+
+    <div className="historia-card-titulo">
+
+      <div className="historia-seccion-icono">
+        👤
+      </div>
+
+      <div>
+        <h2>Datos del paciente</h2>
+        <span>Información personal</span>
+      </div>
+
+    </div>
+
+
+    {historia.paciente && (
+
+      <div className="historia-datos-grid">
+
+        <div className="dato-historia">
+          <span>Nombre completo</span>
+
+          <strong>
+            {historia.paciente.nombre}{" "}
+            {historia.paciente.apellido}
+          </strong>
+        </div>
+
+        <div className="dato-historia">
+          <span>DNI</span>
+
+          <strong>
+            {historia.paciente.dni}
+          </strong>
+        </div>
+
+        <div className="dato-historia">
+          <span>Teléfono</span>
+
+          <strong>
+            {historia.paciente.telefono || "No informado"}
+          </strong>
+        </div>
+
+        <div className="dato-historia">
+          <span>Email</span>
+
+          <strong>
+            {historia.paciente.email || "No informado"}
+          </strong>
+        </div>
+
+      </div>
+
+    )}
+
+  </section>
+
+
+  {/* DATOS MÉDICOS */}
+
+  <section className="historia-card">
+
+    <div className="historia-card-titulo">
+
+      <div className="historia-seccion-icono">
+        🩺
+      </div>
+
+      <div>
+        <h2>Datos médicos</h2>
+        <span>Información del médico de cabecera</span>
+      </div>
+
+    </div>
+
+
+    <div className="historia-lista">
+
+      <div className="historia-dato">
+        <span>Médico de cabecera</span>
+        <strong>
+          {historia.medico_cabecera || "No informado"}
+        </strong>
+      </div>
+
+      <div className="historia-dato">
+        <span>Teléfono del médico</span>
+        <strong>
+          {historia.telefono_medico || "No informado"}
+        </strong>
+      </div>
+
+      <div className="historia-dato">
+        <span>Servicio de urgencia</span>
+        <strong>
+          {mostrarSiNo(historia.servicio_urgencia)}
+        </strong>
+      </div>
+
+      {historia.servicio_urgencia_cual && (
+        <div className="historia-dato">
+          <span>Cuál</span>
+          <strong>
+            {historia.servicio_urgencia_cual}
+          </strong>
+        </div>
+      )}
+
+    </div>
+
+  </section>
+
+
+  {/* ANTECEDENTES */}
+
+  <section className="historia-card">
+
+    <div className="historia-card-titulo">
+
+      <div className="historia-seccion-icono">
+        📝
+      </div>
+
+      <div>
+        <h2>Antecedentes</h2>
+        <span>Antecedentes médicos relevantes</span>
+      </div>
+
+    </div>
+
+
+    <div className="historia-lista">
+
+      <div className="historia-dato">
+        <span>Hospitalización</span>
+        <strong>
+          {mostrarSiNo(historia.hospitalizacion)}
+        </strong>
+      </div>
+
+      {historia.hospitalizacion_motivo && (
+        <div className="historia-dato">
+          <span>Motivo</span>
+          <strong>
+            {historia.hospitalizacion_motivo}
+          </strong>
+        </div>
+      )}
+
+      <div className="historia-dato">
+        <span>Tratamiento médico</span>
+        <strong>
+          {mostrarSiNo(historia.tratamiento_medico)}
+        </strong>
+      </div>
+
+      {historia.tratamiento_medico_cual && (
+        <div className="historia-dato">
+          <span>Cuál</span>
+          <strong>
+            {historia.tratamiento_medico_cual}
+          </strong>
+        </div>
+      )}
+
+      <div className="historia-dato">
+        <span>Alergias a medicamentos</span>
+        <strong>
+          {mostrarSiNo(historia.alergias_medicamentos)}
+        </strong>
+      </div>
+
+      {historia.alergias_cuales && (
+        <div className="historia-dato">
+          <span>Cuáles</span>
+          <strong>
+            {historia.alergias_cuales}
+          </strong>
+        </div>
+      )}
+
+      <div className="historia-dato">
+        <span>Sangrado excesivo</span>
+        <strong>
+          {mostrarSiNo(historia.sangrado_excesivo)}
+        </strong>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  {/* AFECCIONES */}
+
+  <section className="historia-card">
+
+    <div className="historia-card-titulo">
+
+      <div className="historia-seccion-icono">
+        ❤️
+      </div>
+
+      <div>
+        <h2>Afecciones</h2>
+        <span>Enfermedades o condiciones informadas</span>
+      </div>
+
+    </div>
+
+    <div className="historia-observacion">
+
+      {Array.isArray(historia.afecciones)
+        ? historia.afecciones.join(", ")
+        : historia.afecciones || "Ninguna"}
+
+    </div>
+
+  </section>
+
+
+  {/* MEDICAMENTOS */}
+
+  <section className="historia-card">
+
+    <div className="historia-card-titulo">
+
+      <div className="historia-seccion-icono">
+        💊
+      </div>
+
+      <div>
+        <h2>Medicamentos</h2>
+        <span>Medicaciones actuales</span>
+      </div>
+
+    </div>
+
+
+    <div className="historia-lista">
+
+      <div className="historia-dato">
+        <span>Toma medicamentos</span>
+        <strong>
+          {mostrarSiNo(historia.toma_medicamentos)}
+        </strong>
+      </div>
+
+      {historia.medicamentos_cuales && (
+        <div className="historia-dato">
+          <span>Cuáles</span>
+          <strong>
+            {historia.medicamentos_cuales}
+          </strong>
+        </div>
+      )}
+
+    </div>
+
+  </section>
+
+
+  {/* HÁBITOS */}
+
+  <section className="historia-card">
+
+    <div className="historia-card-titulo">
+
+      <div className="historia-seccion-icono">
+        🌿
+      </div>
+
+      <div>
+        <h2>Hábitos</h2>
+        <span>Información sobre hábitos</span>
+      </div>
+
+    </div>
+
+
+    <div className="historia-lista">
+
+      <div className="historia-dato">
+        <span>Cansancio al caminar</span>
+        <strong>
+          {mostrarSiNo(historia.cansancio_al_caminar)}
+        </strong>
+      </div>
+
+      <div className="historia-dato">
+        <span>Fuma</span>
+        <strong>
+          {mostrarSiNo(historia.fuma)}
+        </strong>
+      </div>
+
+      {historia.cantidad_tabaco && (
+        <div className="historia-dato">
+          <span>Cantidad de tabaco</span>
+          <strong>
+            {historia.cantidad_tabaco}
+          </strong>
+        </div>
+      )}
+
+      <div className="historia-dato">
+        <span>Bebe alcohol</span>
+        <strong>
+          {mostrarSiNo(historia.bebe_alcohol)}
+        </strong>
+      </div>
+
+      {historia.cantidad_alcohol && (
+        <div className="historia-dato">
+          <span>Cantidad de alcohol</span>
+          <strong>
+            {historia.cantidad_alcohol}
+          </strong>
+        </div>
+      )}
+
+    </div>
+
+  </section>
+
+
+  {/* EMBARAZO */}
+
+  <section className="historia-card">
+
+    <div className="historia-card-titulo">
+
+      <div className="historia-seccion-icono">
+        🤰
+      </div>
+
+      <div>
+        <h2>Embarazo</h2>
+        <span>Información relacionada</span>
+      </div>
+
+    </div>
+
+
+    <div className="historia-lista">
+
+      <div className="historia-dato">
+        <span>Embarazo</span>
+        <strong>
+          {mostrarSiNo(historia.embarazo)}
+        </strong>
+      </div>
+
+      {historia.embarazo_tiempo && (
+        <div className="historia-dato">
+          <span>Tiempo</span>
+          <strong>
+            {historia.embarazo_tiempo}
+          </strong>
+        </div>
+      )}
+
+    </div>
+
+  </section>
+
+
+  {/* RADIACIÓN */}
+
+  <section className="historia-card">
+
+    <div className="historia-card-titulo">
+
+      <div className="historia-seccion-icono">
+        ☢️
+      </div>
+
+      <div>
+        <h2>Radiación</h2>
+        <span>Antecedentes de exposición</span>
+      </div>
+
+    </div>
+
+
+    <div className="historia-lista">
+
+      <div className="historia-dato">
+        <span>Radiación</span>
+        <strong>
+          {mostrarSiNo(historia.radiacion)}
+        </strong>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  {/* INFORME MÉDICO */}
+
+  <section className="historia-card">
+
+    <div className="historia-card-titulo">
+
+      <div className="historia-seccion-icono">
+        📄
+      </div>
+
+      <div>
+        <h2>Informe médico</h2>
+        <span>Información adicional</span>
+      </div>
+
+    </div>
+
+
+    <div className="historia-lista">
+
+      <div className="historia-dato">
+        <span>Informe médico</span>
+        <strong>
+          {mostrarSiNo(historia.informe_medico)}
+        </strong>
+      </div>
+
+    </div>
+
+
+    <div className="historia-observaciones">
+
+      <span>Observaciones</span>
+
+      <p>
+        {historia.observaciones || "Sin observaciones"}
+      </p>
+
+    </div>
+
+  </section>
+
+
+  {/* ACCIONES */}
+
+  <div className="historia-acciones-finales">
+
+    <button
+      className="btn-historia btn-editar-historia"
+      onClick={() =>
+        navigate(`/historias-clinicas/${id}/editar`)
+      }
+    >
+      ✏️ Editar historia clínica
+    </button>
+
+    <button
+      className="btn-historia btn-volver-historia"
+      onClick={() => navigate("/pacientes")}
+    >
+      ← Volver a pacientes
+    </button>
+
+  </div>
+
+</div>
+
+
+);
 }
 
 export default HistoriaClinica;

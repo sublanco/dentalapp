@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react"
-import { useParams } from "react-router"
-
+import { useParams, useNavigate } from "react-router"
 
 function Odontograma() {
 
   const { id } = useParams()
+  const navigate = useNavigate()
+
   const [estadoSeleccionado, setEstadoSeleccionado] = useState("caries")
   const [tipoDenticion, setTipoDenticion] = useState("permanente")
 
   const [piezas, setPiezas] = useState({})
   const [paciente, setPaciente] = useState(null)
+
+  const [modoBorrado, setModoBorrado] = useState(false)
 
   useEffect(() => {
     const cargarOdontograma = async () => {
@@ -39,10 +42,7 @@ function Odontograma() {
 
         setPiezas(piezasCargadas)
 
-        console.log(
-          "Odontograma cargado:",
-          piezasCargadas
-        )
+        console.log("Odontograma cargado:", piezasCargadas)
 
       } catch (error) {
         console.error(
@@ -54,6 +54,7 @@ function Odontograma() {
 
     cargarOdontograma()
   }, [id])
+
   useEffect(() => {
     const cargarPaciente = async () => {
       try {
@@ -91,6 +92,7 @@ function Odontograma() {
     48, 47, 46, 45, 44, 43, 42, 41,
     31, 32, 33, 34, 35, 36, 37, 38
   ]
+
   const dientesTemporariosSuperiores = [
     55, 54, 53, 52, 51,
     61, 62, 63, 64, 65
@@ -140,6 +142,21 @@ function Odontograma() {
   }
 
   const seleccionarCara = async (numero, cara) => {
+
+    // MODO BORRADO
+    if (modoBorrado) {
+
+      if (piezas[numero]?.[cara]) {
+        await eliminarCara(
+          numero,
+          cara,
+          piezas[numero][cara].id
+        )
+      }
+
+      return
+    }
+
     console.log("Pieza:", numero)
     console.log("Cara:", cara)
     console.log("Estado:", estadoSeleccionado)
@@ -148,11 +165,14 @@ function Odontograma() {
       ...previas,
       [numero]: {
         ...(previas[numero] || {}),
-        [cara]: estadoSeleccionado
+        [cara]: {
+          estado: estadoSeleccionado
+        }
       }
     }))
 
     try {
+
       const respuesta = await fetch(
         `http://127.0.0.1:8000/api/pacientes/${id}/odontograma`,
         {
@@ -175,14 +195,36 @@ function Odontograma() {
 
       const datos = await respuesta.json()
 
+      // Actualizamos el ID devuelto por Laravel
+      setPiezas((previas) => ({
+        ...previas,
+        [numero]: {
+          ...(previas[numero] || {}),
+          [cara]: {
+            id: datos.id,
+            estado: estadoSeleccionado
+          }
+        }
+      }))
+
       console.log("Guardado correctamente:", datos)
 
     } catch (error) {
-      console.error("Error al guardar odontograma:", error)
+      console.error(
+        "Error al guardar odontograma:",
+        error
+      )
     }
   }
+
   const eliminarCara = async (numero, cara, piezaId) => {
+
+    if (!piezaId) {
+      return
+    }
+
     try {
+
       const respuesta = await fetch(
         `http://127.0.0.1:8000/api/odontograma-piezas/${piezaId}`,
         {
@@ -198,9 +240,11 @@ function Odontograma() {
       }
 
       setPiezas((previas) => {
+
         const nuevasPiezas = { ...previas }
 
         if (nuevasPiezas[numero]) {
+
           const nuevasCaras = {
             ...nuevasPiezas[numero]
           }
@@ -220,6 +264,7 @@ function Odontograma() {
       console.log("Marca eliminada correctamente")
 
     } catch (error) {
+
       console.error(
         "Error al eliminar marca:",
         error
@@ -227,23 +272,32 @@ function Odontograma() {
     }
   }
 
-
   const renderCara = (numero, cara, clase) => {
-    const estado = piezas[numero]?.[cara]?.estado
+
+    const datosCara = piezas[numero]?.[cara]
+
+    const estado =
+      typeof datosCara === "string"
+        ? datosCara
+        : datosCara?.estado
 
     return (
       <span
-        className={`cara-diente ${clase}`}
+        className={`cara-diente ${clase} ${
+          modoBorrado ? "modo-borrado" : ""
+        }`}
 
         onClick={(e) => {
           e.stopPropagation()
           seleccionarCara(numero, cara)
         }}
+
         onContextMenu={(e) => {
           e.preventDefault()
           e.stopPropagation()
 
           if (piezas[numero]?.[cara]) {
+
             eliminarCara(
               numero,
               cara,
@@ -258,12 +312,13 @@ function Odontograma() {
             : "white"
         }}
       >
-        { ""}
+        {""}
       </span>
     )
   }
 
   const renderDiente = (numero) => {
+
     return (
       <div
         key={numero}
@@ -322,81 +377,183 @@ function Odontograma() {
   return (
     <div className="odontograma-container">
 
-      <h2>Odontograma</h2>
+      {/* ENCABEZADO */}
+
+      <div className="odontograma-header">
+
+        <div>
+          <h2>🦷 Odontograma</h2>
+
+          <p className="odontograma-subtitulo">
+            Registro odontológico del paciente
+          </p>
+        </div>
+
+        <button
+          className="btn-odontograma btn-volver"
+          onClick={() => navigate("/pacientes")}
+        >
+          ← Volver a pacientes
+        </button>
+
+      </div>
+
+      {/* DATOS DEL PACIENTE */}
 
       {paciente && (
         <div className="datos-paciente-odontograma">
-          <strong>Paciente:</strong>{" "}
-          {paciente.nombre} {paciente.apellido}
-          {" | "}
-          <strong>DNI:</strong>{" "}
-          {paciente.dni}
+
+          <div>
+            <span className="dato-label">
+              Paciente
+            </span>
+
+            <strong>
+              {paciente.nombre} {paciente.apellido}
+            </strong>
+          </div>
+
+          <div>
+            <span className="dato-label">
+              DNI
+            </span>
+
+            <strong>
+              {paciente.dni}
+            </strong>
+          </div>
+
         </div>
       )}
 
-      <div className="odontograma-menu">
-        <label htmlFor="denticion">
-          Tipo de dentición:
-        </label>
+      {/* BARRA DE ACCIONES */}
 
-        <select
-          id="denticion"
-          value={tipoDenticion}
-          onChange={(e) => setTipoDenticion(e.target.value)}
+      <div className="odontograma-acciones">
+
+        <button
+          className={`btn-odontograma btn-guardar ${
+            !modoBorrado ? "activo" : ""
+          }`}
+          onClick={() => setModoBorrado(false)}
         >
-          <option value="permanente">Permanente</option>
-          <option value="temporaria">Temporaria (niños)</option>
-        </select>
+          💾 Guardar / Modificar
+        </button>
 
-        <label htmlFor="estado">
-          Seleccionar estado:
-        </label>
-
-        <select
-          id="estado"
-          value={estadoSeleccionado}
-          onChange={(e) =>
-            setEstadoSeleccionado(e.target.value)
-          }
+        <button
+          className={`btn-odontograma btn-borrar ${
+            modoBorrado ? "activo" : ""
+          }`}
+          onClick={() => setModoBorrado(!modoBorrado)}
         >
-          {estados.map((estado) => (
-            <option
-              key={estado.valor}
-              value={estado.valor}
-            >
-              {estado.nombre}
-            </option>
-          ))}
-        </select>
+          🗑️ {modoBorrado ? "Cancelar borrado" : "Borrar"}
+        </button>
 
       </div>
+
+      {/* AVISO DE MODO BORRADO */}
+
+      {modoBorrado && (
+        <div className="aviso-borrado">
+          🗑️ <strong>Modo borrado activado:</strong>{" "}
+          hacé clic sobre una cara marcada para eliminarla.
+        </div>
+      )}
+
+      {/* MENÚ */}
+
+      <div className="odontograma-menu">
+
+        <div className="campo-odontograma">
+
+          <label htmlFor="denticion">
+            Tipo de dentición
+          </label>
+
+          <select
+            id="denticion"
+            value={tipoDenticion}
+            onChange={(e) =>
+              setTipoDenticion(e.target.value)
+            }
+          >
+            <option value="permanente">
+              Permanente
+            </option>
+
+            <option value="temporaria">
+              Temporaria (niños)
+            </option>
+
+          </select>
+
+        </div>
+
+        <div className="campo-odontograma">
+
+          <label htmlFor="estado">
+            Estado a marcar
+          </label>
+
+          <select
+            id="estado"
+            value={estadoSeleccionado}
+            onChange={(e) => {
+              setEstadoSeleccionado(e.target.value)
+              setModoBorrado(false)
+            }}
+          >
+
+            {estados.map((estado) => (
+              <option
+                key={estado.valor}
+                value={estado.valor}
+              >
+                {estado.nombre}
+              </option>
+            ))}
+
+          </select>
+
+        </div>
+
+      </div>
+
+      {/* ODONTOGRAMA */}
 
       <div className="odontograma">
 
         <div className="fila-dientes">
+
           {(tipoDenticion === "permanente"
             ? dientesSuperiores
             : dientesTemporariosSuperiores
           ).map(renderDiente)}
+
         </div>
 
         <div className="separador"></div>
 
         <div className="fila-dientes">
+
           {(tipoDenticion === "permanente"
             ? dientesInferiores
             : dientesTemporariosInferiores
           ).map(renderDiente)}
+
         </div>
 
       </div>
+
+      {/* LEYENDA */}
+
       <div className="leyenda">
 
-        <h3>Estados</h3>
+        <h3>Referencia de estados</h3>
 
         <div className="leyenda-items">
 
           {estados.map((estado) => (
+
             <div
               key={estado.valor}
               className="leyenda-item"
@@ -409,6 +566,7 @@ function Odontograma() {
               {estado.nombre}
 
             </div>
+
           ))}
 
         </div>
@@ -420,3 +578,4 @@ function Odontograma() {
 }
 
 export default Odontograma
+

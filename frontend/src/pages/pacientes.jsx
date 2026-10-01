@@ -146,12 +146,14 @@ function Pacientes() {
   function verConsultas(paciente) {
     navigate(`/pacientes/${paciente.id}/consultas`);
   }
+
   // ==============================
   // VER ODONTOGRAMA
   // ==============================
+
   const verOdontograma = (paciente) => {
-  navigate(`/pacientes/${paciente.id}/odontograma`)
-}
+    navigate(`/pacientes/${paciente.id}/odontograma`);
+  };
 
   // ==============================
   // GUARDAR PACIENTE
@@ -257,304 +259,507 @@ function Pacientes() {
   // ==============================
 
   return (
-    <div>
-      <h1>Pacientes 🦷</h1>
-      <p>Gestión de pacientes</p>
+    <div className="pacientes-page">
 
-      {/* BOTÓN NUEVO PACIENTE */}
+      {/* ENCABEZADO */}
 
-      {!mostrarFormulario && (
-        <button onClick={nuevoPaciente}>
-          Nuevo paciente
-        </button>
-      )}
+      <div className="pagina-encabezado">
 
-      {/* FORMULARIO DE PACIENTE */}
+        <div>
+          <div className="titulo-con-icono">
+            <span className="pagina-icono">
+              👥
+            </span>
+
+            <div>
+              <h1>Pacientes</h1>
+
+              <p>
+                Gestión y seguimiento de pacientes
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {!mostrarFormulario && (
+          <button
+            className="btn-pacientes btn-nuevo"
+            onClick={nuevoPaciente}
+          >
+            ＋ Nuevo paciente
+          </button>
+        )}
+
+      </div>
+
+
+      {/* FORMULARIO */}
 
       {mostrarFormulario && (
-        <div>
-          <hr />
 
-          <h2>
-            {pacienteEditando
-              ? "Editar paciente"
-              : "Nuevo paciente"}
-          </h2>
+        <div className="pacientes-card formulario-paciente">
+
+          <div className="card-titulo">
+
+            <div>
+              <h2>
+                {pacienteEditando
+                  ? "Editar paciente"
+                  : "Nuevo paciente"}
+              </h2>
+
+              <p>
+                Complete los datos del paciente
+              </p>
+            </div>
+
+          </div>
+
 
           <form onSubmit={guardarPaciente}>
-            <div>
-              <label>Nombre:</label>
-              <br />
-              <input
-                type="text"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                required
-              />
+
+            <div className="form-grid">
+
+              <div className="campo-formulario">
+                <label>Nombre</label>
+
+                <input
+                  type="text"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
+                  required
+                />
+              </div>
+
+
+              <div className="campo-formulario">
+                <label>Apellido</label>
+
+                <input
+                  type="text"
+                  value={apellido}
+                  onChange={(e) => setApellido(e.target.value)}
+                  required
+                />
+              </div>
+
+
+              <div className="campo-formulario">
+                <label>DNI</label>
+
+                <input
+                  type="text"
+                  value={dni}
+                  onChange={(e) => setDni(e.target.value)}
+                  required
+                />
+              </div>
+
+
+              <div className="campo-formulario">
+                <label>Teléfono</label>
+
+                <input
+                  type="text"
+                  value={telefono}
+                  onChange={(e) => setTelefono(e.target.value)}
+                  required
+                />
+              </div>
+
+
+              <div className="campo-formulario">
+                <label>Email</label>
+
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+
+
+              <div className="campo-formulario">
+                <label>Fecha de nacimiento</label>
+
+                <input
+                  type="date"
+                  value={fechaNacimiento}
+                  onChange={(e) => setFechaNacimiento(e.target.value)}
+                />
+              </div>
+
+
+              <div className="campo-formulario">
+                <label>Obra social</label>
+
+                <input
+                  type="text"
+                  value={obraSocial}
+                  onChange={(e) => setObraSocial(e.target.value)}
+                  placeholder="Ingrese la obra social"
+                />
+              </div>
+
+
+              <div className="campo-formulario campo-completo">
+                <label>Observaciones</label>
+
+                <textarea
+                  value={observaciones}
+                  onChange={(e) => setObservaciones(e.target.value)}
+                  placeholder="Observaciones del paciente"
+                  rows="4"
+                />
+              </div>
+
             </div>
 
-            <br />
 
-            <div>
-              <label>Apellido:</label>
-              <br />
-              <input
-                type="text"
-                value={apellido}
-                onChange={(e) => setApellido(e.target.value)}
-                required
-              />
+            <div className="formulario-acciones">
+
+              <button
+                type="submit"
+                className="btn-pacientes btn-guardar-paciente"
+              >
+                💾{" "}
+                {pacienteEditando
+                  ? "Actualizar paciente"
+                  : "Guardar paciente"}
+              </button>
+
+
+              <button
+                type="button"
+                className="btn-pacientes btn-cancelar"
+                onClick={cancelarFormulario}
+              >
+                Cancelar
+              </button>
+
             </div>
 
-            <br />
-
-            <div>
-              <label>DNI:</label>
-              <br />
-              <input
-                type="text"
-                value={dni}
-                onChange={(e) => setDni(e.target.value)}
-                required
-              />
-            </div>
-
-            <br />
-
-            <div>
-              <label>Teléfono:</label>
-              <br />
-              <input
-                type="text"
-                value={telefono}
-                onChange={(e) => setTelefono(e.target.value)}
-                required
-              />
-            </div>
-
-            <br />
-
-            <div>
-              <label>Email:</label>
-              <br />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-
-            <br />
-
-            <div>
-              <label>Fecha de nacimiento:</label>
-              <br />
-              <input
-                type="date"
-                value={fechaNacimiento}
-                onChange={(e) => setFechaNacimiento(e.target.value)}
-              />
-            </div>
-
-            <br />
-
-            <div>
-              <label>Obra social:</label>
-              <br />
-              <input
-                type="text"
-                value={obraSocial}
-                onChange={(e) => setObraSocial(e.target.value)}
-                placeholder="Ingrese la obra social"
-              />
-            </div>
-
-            <br />
-
-            <div>
-              <label>Observaciones:</label>
-              <br />
-              <textarea
-                value={observaciones}
-                onChange={(e) => setObservaciones(e.target.value)}
-                placeholder="Observaciones del paciente"
-                rows="4"
-              />
-            </div>
-
-            <br />
-
-            <button type="submit">
-              {pacienteEditando
-                ? "Actualizar paciente"
-                : "Guardar paciente"}
-            </button>
-
-            {" "}
-
-            <button
-              type="button"
-              onClick={cancelarFormulario}
-            >
-              Cancelar
-            </button>
           </form>
+
         </div>
       )}
+
 
       {/* FICHA DEL PACIENTE */}
 
       {pacienteSeleccionado && !mostrarFormulario && (
-        <div>
-          <hr />
 
-          <h2>Ficha del paciente 🦷</h2>
+        <div className="pacientes-card ficha-paciente">
 
-          <h3>
-            {pacienteSeleccionado.nombre}{" "}
-            {pacienteSeleccionado.apellido}
-          </h3>
+          <div className="ficha-encabezado">
 
-          <p>
-            <strong>DNI:</strong>{" "}
-            {pacienteSeleccionado.dni || "No registrado"}
-          </p>
+            <div>
+              <span className="ficha-icono">
+                🪪
+              </span>
 
-          <p>
-            <strong>Fecha de nacimiento:</strong>{" "}
-            {pacienteSeleccionado.fecha_nacimiento || "No registrada"}
-          </p>
+              <div>
+                <h2>Ficha del paciente</h2>
 
-          <p>
-            <strong>Teléfono:</strong>{" "}
-            {pacienteSeleccionado.telefono || "No registrado"}
-          </p>
+                <h3>
+                  {pacienteSeleccionado.nombre}{" "}
+                  {pacienteSeleccionado.apellido}
+                </h3>
+              </div>
+            </div>
 
-          <p>
-            <strong>Email:</strong>{" "}
-            {pacienteSeleccionado.email || "No registrado"}
-          </p>
+            <button
+              className="btn-pacientes btn-cerrar"
+              onClick={() => setPacienteSeleccionado(null)}
+            >
+              ✕ Cerrar
+            </button>
 
-          <p>
-            <strong>Obra social:</strong>{" "}
-            {pacienteSeleccionado.obra_social || "No registrada"}
-          </p>
-
-          <p>
-            <strong>Observaciones:</strong>{" "}
-            {pacienteSeleccionado.observaciones || "Sin observaciones"}
-          </p>
+          </div>
 
 
-          {" "}
+          <div className="ficha-datos">
 
-          <button
-            onClick={() => setPacienteSeleccionado(null)}
-          >
-            Cerrar ficha
-          </button>
+            <div>
+              <span>DNI</span>
+              <strong>
+                {pacienteSeleccionado.dni || "No registrado"}
+              </strong>
+            </div>
+
+            <div>
+              <span>Fecha de nacimiento</span>
+              <strong>
+                {pacienteSeleccionado.fecha_nacimiento ||
+                  "No registrada"}
+              </strong>
+            </div>
+
+            <div>
+              <span>Teléfono</span>
+              <strong>
+                {pacienteSeleccionado.telefono ||
+                  "No registrado"}
+              </strong>
+            </div>
+
+            <div>
+              <span>Email</span>
+              <strong>
+                {pacienteSeleccionado.email ||
+                  "No registrado"}
+              </strong>
+            </div>
+
+            <div>
+              <span>Obra social</span>
+              <strong>
+                {pacienteSeleccionado.obra_social ||
+                  "No registrada"}
+              </strong>
+            </div>
+
+            <div className="ficha-observaciones">
+              <span>Observaciones</span>
+              <strong>
+                {pacienteSeleccionado.observaciones ||
+                  "Sin observaciones"}
+              </strong>
+            </div>
+
+          </div>
+
         </div>
       )}
 
+
       {/* BUSCADOR */}
 
-      <hr />
+      <div className="pacientes-card buscador-card">
 
-      <h2>Buscar paciente</h2>
+        <div className="buscador-titulo">
+          <div>
+            <h2>Buscar paciente</h2>
 
-      <input
-        type="text"
-        placeholder="Buscar por nombre, apellido o DNI..."
-        value={busqueda}
-        onChange={(e) => setBusqueda(e.target.value)}
-        style={{
-          width: "300px",
-          padding: "8px",
-        }}
-      />
+            <p>
+              Buscá por nombre, apellido o DNI
+            </p>
+          </div>
+        </div>
 
-      {/* LISTADO DE PACIENTES */}
+        <div className="buscador-input">
 
-      <h2>Listado de pacientes</h2>
+          <span>🔎</span>
 
-      {pacientesFiltrados.length === 0 ? (
-        <p>No se encontraron pacientes.</p>
-      ) : (
-        <table className="tabla-pacientes">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Apellido</th>
-              <th>DNI</th>
-              <th>Teléfono</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
+          <input
+            type="text"
+            placeholder="Nombre, apellido o DNI..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
 
-          <tbody>
-            {pacientesFiltrados.map((paciente) => (
-              <tr key={paciente.id}>
-                <td>{paciente.id}</td>
-                <td>{paciente.nombre}</td>
-                <td>{paciente.apellido}</td>
-                <td>{paciente.dni}</td>
-                <td>{paciente.telefono}</td>
+          {busqueda && (
+            <button
+              type="button"
+              onClick={() => setBusqueda("")}
+            >
+              ✕
+            </button>
+          )}
 
-                <td>
-                  <button
-                    onClick={() => verFicha(paciente)}
-                  >
-                    Ver ficha
-                  </button>
+        </div>
 
-                  {" "}
+      </div>
 
-                  <button
-                    onClick={() => editarPaciente(paciente)}
-                  >
-                    Editar
-                  </button>
 
-                  {" "}
+      {/* LISTADO */}
 
-                  <button
-                    onClick={() => verHistoriaClinica(paciente)}
-                  >
-                    🦷 Historia clínica
-                  </button>
+      <div className="pacientes-card listado-card">
 
-                  {" "}
+        <div className="listado-encabezado">
 
-                  <button
-                    onClick={() => verConsultas(paciente)}
-                  >
-                    📋 Consultas
-                  </button>
-                  {" "}
+          <div>
+            <h2>Listado de pacientes</h2>
 
-                  <button
-                    onClick={() => verOdontograma(paciente)}
-                  >
-                    🦷 Odontograma
-                  </button>
+            <p>
+              {pacientesFiltrados.length} paciente
+              {pacientesFiltrados.length !== 1 ? "s" : ""}
+            </p>
+          </div>
 
-                  {" "}
+        </div>
 
-                  <button
-                    onClick={() => eliminarPaciente(paciente.id)}
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+
+        {pacientesFiltrados.length === 0 ? (
+
+          <div className="sin-pacientes">
+
+            <div>
+              👥
+            </div>
+
+            <h3>
+              No se encontraron pacientes
+            </h3>
+
+            <p>
+              Probá con otro nombre, apellido o DNI.
+            </p>
+
+          </div>
+
+        ) : (
+
+          <div className="tabla-contenedor">
+
+            <table className="tabla-pacientes">
+
+              <thead>
+
+                <tr>
+                  <th>ID</th>
+                  <th>Paciente</th>
+                  <th>DNI</th>
+                  <th>Teléfono</th>
+                  <th>Acciones</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                {pacientesFiltrados.map((paciente) => (
+
+                  <tr key={paciente.id}>
+
+                    <td>
+                      <span className="id-paciente">
+                        #{paciente.id}
+                      </span>
+                    </td>
+
+                    <td>
+
+                      <div className="nombre-tabla">
+
+                        <div className="avatar-paciente">
+                          {paciente.nombre
+                            ?.charAt(0)
+                            .toUpperCase()}
+                        </div>
+
+                        <div>
+
+                          <strong>
+                            {paciente.nombre}{" "}
+                            {paciente.apellido}
+                          </strong>
+
+                        </div>
+
+                      </div>
+
+                    </td>
+
+                    <td>
+                      {paciente.dni}
+                    </td>
+
+                    <td>
+                      {paciente.telefono}
+                    </td>
+
+                    <td>
+
+                      <div className="acciones-paciente">
+
+                        <button
+                          className="accion ficha"
+                          onClick={() =>
+                            verFicha(paciente)
+                          }
+                          title="Ver ficha"
+                        >
+                          🪪
+                        </button>
+
+
+                        <button
+                          className="accion editar"
+                          onClick={() =>
+                            editarPaciente(paciente)
+                          }
+                          title="Editar paciente"
+                        >
+                          ✏️
+                        </button>
+
+
+                        <button
+                          className="accion historia"
+                          onClick={() =>
+                            verHistoriaClinica(paciente)
+                          }
+                          title="Historia clínica"
+                        >
+                          📋
+                        </button>
+
+
+                        <button
+                          className="accion consulta"
+                          onClick={() =>
+                            verConsultas(paciente)
+                          }
+                          title="Consultas"
+                        >
+                          📅
+                        </button>
+
+
+                        <button
+                          className="accion odontograma"
+                          onClick={() =>
+                            verOdontograma(paciente)
+                          }
+                          title="Odontograma"
+                        >
+                          🦷
+                        </button>
+
+
+                        <button
+                          className="accion eliminar"
+                          onClick={() =>
+                            eliminarPaciente(paciente.id)
+                          }
+                          title="Eliminar paciente"
+                        >
+                          🗑️
+                        </button>
+
+                      </div>
+
+                    </td>
+
+                  </tr>
+
+                ))}
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        )}
+
+      </div>
+
     </div>
   );
 }
 
 export default Pacientes;
+
