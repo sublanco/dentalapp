@@ -28,6 +28,7 @@ class PacienteController extends Controller
         'telefono' => 'nullable|string|max:30',
         'email' => 'nullable|email|max:255',
         'obra_social' => 'nullable|string|max:255',
+        'numero_afiliado' => 'nullable|string|max:100',
         'observaciones' => 'nullable|string',
     ]);
 
@@ -73,6 +74,7 @@ class PacienteController extends Controller
         'telefono' => 'nullable|string|max:30',
         'email' => 'nullable|email|max:255',
         'obra_social' => 'nullable|string|max:255',
+        'numero_afiliado' => 'nullable|string|max:100',
         'observaciones' => 'nullable|string',
     ]);
 

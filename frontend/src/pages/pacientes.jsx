@@ -23,6 +23,7 @@ function Pacientes() {
   const [email, setEmail] = useState("");
   const [fechaNacimiento, setFechaNacimiento] = useState("");
   const [obraSocial, setObraSocial] = useState("");
+  const [numeroAfiliado, setNumeroAfiliado] = useState("");
   const [observaciones, setObservaciones] = useState("");
 
   // ==============================
@@ -80,6 +81,7 @@ function Pacientes() {
     setEmail("");
     setFechaNacimiento("");
     setObraSocial("");
+    setNumeroAfiliado("");
     setObservaciones("");
     setPacienteEditando(null);
   }
@@ -117,6 +119,7 @@ function Pacientes() {
     setEmail(paciente.email || "");
     setFechaNacimiento(paciente.fecha_nacimiento || "");
     setObraSocial(paciente.obra_social || "");
+    setNumeroAfiliado(paciente.numero_afiliado || "");
     setObservaciones(paciente.observaciones || "");
 
     setMostrarFormulario(true);
@@ -170,6 +173,7 @@ function Pacientes() {
       email,
       fecha_nacimiento: fechaNacimiento || null,
       obra_social: obraSocial,
+      numero_afiliado: numeroAfiliado,
       observaciones,
     };
 
@@ -402,6 +406,20 @@ function Pacientes() {
                 />
               </div>
 
+              <div className="campo-formulario">
+                <label>Número de afiliado</label>
+
+                <input
+                  type="text"
+                  value={numeroAfiliado}
+                  onChange={(e) =>
+                    setNumeroAfiliado(e.target.value)
+                  }
+                  placeholder="Ingrese el número de afiliado"
+                />
+              </div>
+
+
 
               <div className="campo-formulario campo-completo">
                 <label>Observaciones</label>
@@ -517,6 +535,13 @@ function Pacientes() {
               <strong>
                 {pacienteSeleccionado.obra_social ||
                   "No registrada"}
+              </strong>
+            </div>
+            <div>
+              <span>Número de afiliado</span>
+              <strong>
+                {pacienteSeleccionado.numero_afiliado ||
+                  "No registrado"}
               </strong>
             </div>
 

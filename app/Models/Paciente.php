@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ class Paciente extends Model
         'telefono',
         'email',
         'obra_social',
+        'numero_afiliado',
         'observaciones',
     ];
 
@@ -23,12 +25,16 @@ class Paciente extends Model
     {
         return $this->hasOne(HistoriaClinica::class);
     }
+
+    // Relación con las consultas
     public function consultas(): HasMany
-{
-    return $this->hasMany(Consulta::class);
-}
-public function odontogramaPiezas()
-{
-    return $this->hasMany(OdontogramaPieza::class);
-}
+    {
+        return $this->hasMany(Consulta::class);
+    }
+
+    // Relación con las piezas del odontograma
+    public function odontogramaPiezas(): HasMany
+    {
+        return $this->hasMany(OdontogramaPieza::class);
+    }
 }
