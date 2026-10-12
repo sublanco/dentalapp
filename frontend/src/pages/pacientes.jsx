@@ -675,6 +675,17 @@ function Pacientes() {
                       <div className="acciones-paciente">
 
                         <button
+                          className="accion panel"
+                          onClick={() =>
+                            navigate(`/pacientes/${paciente.id}`)
+                          }
+                          title="Panel del paciente"
+                        >
+                          👤
+                        </button>
+
+
+                        <button
                           className="accion ficha"
                           onClick={() =>
                             verFicha(paciente)

@@ -6,6 +6,7 @@ import Consultas from "./pages/Consultas";
 import Odontograma from "./pages/Odontograma";
 import CrearHistoriaClinica from "./pages/CrearHistoriaClinica";
 import EditarHistoriaClinica from "./pages/EditarHistoriaClinica";
+import PacientePanel from "./pages/PacientePanel";
 
 
 function Inicio() {
@@ -218,6 +219,10 @@ function App() {
           <Route
             path="/"
             element={<Inicio />}
+          />
+          <Route
+            path="/pacientes/:id"
+            element={<PacientePanel />}
           />
 
           <Route
