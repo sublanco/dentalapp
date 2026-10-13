@@ -3732,6 +3732,58 @@ width: 100%;
         align-items: flex-start;
     }
 }
+/* Buscador del historial de consultas */
+
+.consultas-buscador {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0 10px;
+}
+
+.consultas-buscador input {
+    flex: 1;
+    min-width: 0;
+    padding: 13px 15px;
+    border: 1px solid #cbdede;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #294c52;
+    font-size: 14px;
+    outline: none;
+}
+
+.consultas-buscador input:focus {
+    border-color: #087f8c;
+    box-shadow: 0 0 0 3px rgba(8, 127, 140, 0.12);
+}
+
+.consultas-buscador button {
+    padding: 12px 16px;
+    border: 1px solid #b9d8d9;
+    border-radius: 9px;
+    background: #ffffff;
+    color: #176b73;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.consultas-resultados {
+    margin: 8px 0 18px;
+    color: #6b7c80;
+    font-size: 13px;
+}
+
+@media (max-width: 520px) {
+    .consultas-buscador {
+        align-items: stretch;
+    }
+
+    .consultas-buscador button {
+        padding: 10px;
+    }
+}
+
 
 
 

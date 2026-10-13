@@ -6,6 +6,7 @@ function Consultas() {
   const navigate = useNavigate();
 
   const [consultas, setConsultas] = useState([]);
+  const [busqueda, setBusqueda] = useState("");
   const [paciente, setPaciente] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
@@ -49,9 +50,23 @@ function Consultas() {
 
       const datosConsultas = await respuestaConsultas.json();
 
-      const consultasPaciente = datosConsultas.filter(
-        (consulta) => consulta.paciente_id === Number(id)
-      );
+
+      const consultasPaciente = datosConsultas
+        .filter(
+          (consulta) => Number(consulta.paciente_id) === Number(id)
+        )
+        .sort((a, b) => {
+          const fechaA = a.fecha_consulta || "";
+          const fechaB = b.fecha_consulta || "";
+
+          return fechaB.localeCompare(fechaA);
+        });
+
+      setConsultas(consultasPaciente);
+
+
+      setConsultas(consultasPaciente);
+
 
       setConsultas(consultasPaciente);
     } catch (error) {
@@ -204,6 +219,23 @@ function Consultas() {
       alert("No se pudo conectar con el servidor");
     }
   }
+
+
+  const consultasFiltradas = consultas.filter((consulta) => {
+    const texto = busqueda.trim().toLowerCase();
+
+    if (!texto) return true;
+
+    return [
+      consulta.motivo_consulta,
+      consulta.diagnostico,
+      consulta.tratamiento,
+      consulta.observaciones,
+    ].some((dato) =>
+      String(dato || "").toLowerCase().includes(texto)
+    );
+  });
+
 
   function volver() {
     navigate("/pacientes");
@@ -524,10 +556,36 @@ function Consultas() {
 
             </div>
 
+            <div className="consultas-buscador">
+              <input
+                type="search"
+                value={busqueda}
+                onChange={(e) => setBusqueda(e.target.value)}
+                placeholder="Buscar por motivo, diagnóstico o tratamiento..."
+                aria-label="Buscar en el historial de consultas"
+              />
+
+              {busqueda && (
+                <button
+                  type="button"
+                  onClick={() => setBusqueda("")}
+                >
+                  Limpiar
+                </button>
+              )}
+            </div>
+
+            <p className="consultas-resultados">
+              {consultasFiltradas.length}{" "}
+              {consultasFiltradas.length === 1
+                ? "consulta encontrada"
+                : "consultas encontradas"}
+            </p>
+
 
             <div className="consultas-listado">
 
-              {consultas.map((consulta) => (
+              {consultasFiltradas.map((consulta) => (
 
                 <article
                   className="consulta-card-profesional"
