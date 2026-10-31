@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
+import { apiFetch } from "../api";
 
 function Consultas() {
   const { id } = useParams();
@@ -29,8 +30,8 @@ function Consultas() {
       setCargando(true);
       setError("");
 
-      const respuestaPaciente = await fetch(
-        `http://127.0.0.1:8000/api/pacientes/${id}`
+      const respuestaPaciente = await apiFetch(
+        `/api/pacientes/${id}`
       );
 
       if (!respuestaPaciente.ok) {
@@ -40,8 +41,8 @@ function Consultas() {
       const datosPaciente = await respuestaPaciente.json();
       setPaciente(datosPaciente);
 
-      const respuestaConsultas = await fetch(
-        "http://127.0.0.1:8000/api/consultas"
+      const respuestaConsultas = await apiFetch(
+        "/api/consultas"
       );
 
       if (!respuestaConsultas.ok) {
@@ -123,13 +124,10 @@ function Consultas() {
     }
 
     try {
-      const respuesta = await fetch(
-        `http://127.0.0.1:8000/api/consultas/${consulta.id}`,
+      const respuesta = await apiFetch(
+        `/api/consultas/${consulta.id}`,
         {
           method: "DELETE",
-          headers: {
-            Accept: "application/json",
-          },
         }
       );
 
@@ -164,14 +162,10 @@ function Consultas() {
 
     try {
       if (consultaEditando) {
-        const respuesta = await fetch(
-          `http://127.0.0.1:8000/api/consultas/${consultaEditando.id}`,
+        const respuesta = await apiFetch(
+          `/api/consultas/${consultaEditando.id}`,
           {
             method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
             body: JSON.stringify(datosConsulta),
           }
         );
@@ -186,18 +180,13 @@ function Consultas() {
 
         alert("Consulta actualizada correctamente");
       } else {
-        const respuesta = await fetch(
-          "http://127.0.0.1:8000/api/consultas",
+        const respuesta = await apiFetch(
+          "/api/consultas",
           {
             method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
-            },
             body: JSON.stringify(datosConsulta),
           }
         );
-
         const datos = await respuesta.json();
 
         if (!respuesta.ok) {

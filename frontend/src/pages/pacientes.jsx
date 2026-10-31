@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { apiFetch } from "../api";
 
 function Pacientes() {
   const navigate = useNavigate();
@@ -36,9 +37,7 @@ function Pacientes() {
 
   async function obtenerPacientes() {
     try {
-      const respuesta = await fetch(
-        "http://127.0.0.1:8000/api/pacientes"
-      );
+      const respuesta = await apiFetch("/api/pacientes");
 
       if (!respuesta.ok) {
         throw new Error("No se pudieron obtener los pacientes");
@@ -178,18 +177,16 @@ function Pacientes() {
     };
 
     try {
-      const url = pacienteEditando
-        ? `http://127.0.0.1:8000/api/pacientes/${pacienteEditando.id}`
-        : "http://127.0.0.1:8000/api/pacientes";
 
-      const respuesta = await fetch(url, {
+      const url = pacienteEditando
+        ? `/api/pacientes/${pacienteEditando.id}`
+        : "/api/pacientes";
+
+      const respuesta = await apiFetch(url, {
         method: pacienteEditando ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
         body: JSON.stringify(datosPaciente),
       });
+
 
       const datos = await respuesta.json();
 
@@ -228,15 +225,14 @@ function Pacientes() {
     if (!confirmar) return;
 
     try {
-      const respuesta = await fetch(
-        `http://127.0.0.1:8000/api/pacientes/${id}`,
+
+      const respuesta = await apiFetch(
+        `/api/pacientes/${id}`,
         {
           method: "DELETE",
-          headers: {
-            Accept: "application/json",
-          },
         }
       );
+
 
       if (!respuesta.ok) {
         const datos = await respuesta.json();
@@ -798,4 +794,3 @@ function Pacientes() {
 }
 
 export default Pacientes;
-

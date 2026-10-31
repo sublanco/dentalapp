@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useParams, useNavigate } from "react-router"
+import { apiFetch } from "../api"
 
 function Odontograma() {
 
@@ -17,10 +18,9 @@ function Odontograma() {
   useEffect(() => {
     const cargarOdontograma = async () => {
       try {
-        const respuesta = await fetch(
-          `http://127.0.0.1:8000/api/pacientes/${id}/odontograma`
+        const respuesta = await apiFetch(
+          `/api/pacientes/${id}/odontograma`
         )
-
         if (!respuesta.ok) {
           throw new Error("No se pudo cargar el odontograma")
         }
@@ -58,8 +58,8 @@ function Odontograma() {
   useEffect(() => {
     const cargarPaciente = async () => {
       try {
-        const respuesta = await fetch(
-          `http://127.0.0.1:8000/api/pacientes/${id}`
+        const respuesta = await apiFetch(
+          `/api/pacientes/${id}`
         )
 
         if (!respuesta.ok) {
@@ -173,14 +173,10 @@ function Odontograma() {
 
     try {
 
-      const respuesta = await fetch(
-        `http://127.0.0.1:8000/api/pacientes/${id}/odontograma`,
+      const respuesta = await apiFetch(
+        `/api/pacientes/${id}/odontograma`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json"
-          },
           body: JSON.stringify({
             numero_pieza: String(numero),
             cara: cara,
@@ -188,7 +184,6 @@ function Odontograma() {
           })
         }
       )
-
       if (!respuesta.ok) {
         throw new Error("No se pudo guardar la pieza")
       }
@@ -225,13 +220,10 @@ function Odontograma() {
 
     try {
 
-      const respuesta = await fetch(
-        `http://127.0.0.1:8000/api/odontograma-piezas/${piezaId}`,
+      const respuesta = await apiFetch(
+        `/api/odontograma-piezas/${piezaId}`,
         {
-          method: "DELETE",
-          headers: {
-            "Accept": "application/json"
-          }
+          method: "DELETE"
         }
       )
 
@@ -283,9 +275,8 @@ function Odontograma() {
 
     return (
       <span
-        className={`cara-diente ${clase} ${
-          modoBorrado ? "modo-borrado" : ""
-        }`}
+        className={`cara-diente ${clase} ${modoBorrado ? "modo-borrado" : ""
+          }`}
 
         onClick={(e) => {
           e.stopPropagation()
@@ -431,18 +422,16 @@ function Odontograma() {
       <div className="odontograma-acciones">
 
         <button
-          className={`btn-odontograma btn-guardar ${
-            !modoBorrado ? "activo" : ""
-          }`}
+          className={`btn-odontograma btn-guardar ${!modoBorrado ? "activo" : ""
+            }`}
           onClick={() => setModoBorrado(false)}
         >
           💾 Guardar / Modificar
         </button>
 
         <button
-          className={`btn-odontograma btn-borrar ${
-            modoBorrado ? "activo" : ""
-          }`}
+          className={`btn-odontograma btn-borrar ${modoBorrado ? "activo" : ""
+            }`}
           onClick={() => setModoBorrado(!modoBorrado)}
         >
           🗑️ {modoBorrado ? "Cancelar borrado" : "Borrar"}

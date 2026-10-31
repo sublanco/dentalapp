@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { apiFetch } from "../api";
 
 function EditarHistoriaClinica() {
   const { id } = useParams();
@@ -55,8 +56,8 @@ function EditarHistoriaClinica() {
 
   async function obtenerHistoria() {
     try {
-      const respuesta = await fetch(
-        `http://127.0.0.1:8000/api/historias-clinicas/${id}`
+      const respuesta = await apiFetch(
+        `/api/historias-clinicas/${id}`
       );
 
       if (!respuesta.ok) {
@@ -179,23 +180,21 @@ function EditarHistoriaClinica() {
 
         afecciones: formulario.afecciones
           ? formulario.afecciones
-              .split(",")
-              .map((item) => item.trim())
-              .filter((item) => item !== "")
+            .split(",")
+            .map((item) => item.trim())
+            .filter((item) => item !== "")
           : [],
       };
 
-      const respuesta = await fetch(
-        `http://127.0.0.1:8000/api/historias-clinicas/${id}`,
+
+      const respuesta = await apiFetch(
+        `/api/historias-clinicas/${id}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
           body: JSON.stringify(datos),
         }
       );
+
 
       if (!respuesta.ok) {
         const error = await respuesta.text();
