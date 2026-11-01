@@ -256,7 +256,16 @@ function App() {
 
           <div className="dental-links">
             <Link to="/">Inicio</Link>
-            <Link to="/pacientes">Pacientes</Link>
+            <Link
+              to="/pacientes"
+              onClick={() => {
+                if (window.location.pathname === "/pacientes") {
+                  window.dispatchEvent(new Event("mostrar-pacientes-activos"));
+                }
+              }}
+            >
+              Pacientes
+            </Link>
             <button
               type="button"
               onClick={cerrarSesion}

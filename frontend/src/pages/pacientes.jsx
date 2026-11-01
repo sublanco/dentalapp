@@ -11,6 +11,28 @@ function Pacientes() {
 
   const [pacientes, setPacientes] = useState([]);
   const [busqueda, setBusqueda] = useState("");
+  useEffect(() => {
+    function mostrarPacientesActivos() {
+      setVerArchivados(false);
+      setBusqueda("");
+      setPacienteSeleccionado(null);
+      setMostrarFormulario(false);
+    }
+
+    window.addEventListener(
+      "mostrar-pacientes-activos",
+      mostrarPacientesActivos
+    );
+
+    return () => {
+      window.removeEventListener(
+        "mostrar-pacientes-activos",
+        mostrarPacientesActivos
+      );
+    };
+  }, []);
+  const [verArchivados, setVerArchivados] = useState(false);
+  const [cargando, setCargando] = useState(false);
 
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [pacienteEditando, setPacienteEditando] = useState(null);
@@ -33,11 +55,13 @@ function Pacientes() {
 
   useEffect(() => {
     obtenerPacientes();
-  }, []);
+  }, [verArchivados]);
 
   async function obtenerPacientes() {
+    setCargando(true);
     try {
-      const respuesta = await apiFetch("/api/pacientes");
+      const ruta = verArchivados ? "/api/pacientes-archivados" : "/api/pacientes";
+      const respuesta = await apiFetch(ruta);
 
       if (!respuesta.ok) {
         throw new Error("No se pudieron obtener los pacientes");
@@ -47,6 +71,9 @@ function Pacientes() {
       setPacientes(datos);
     } catch (error) {
       console.error("Error al obtener pacientes:", error);
+      alert("No se pudo cargar el listado de pacientes");
+    } finally {
+      setCargando(false);
     }
   }
 
@@ -214,42 +241,40 @@ function Pacientes() {
   }
 
   // ==============================
-  // ELIMINAR PACIENTE
+  // ARCHIVAR O REACTIVAR PACIENTE
   // ==============================
 
-  async function eliminarPaciente(id) {
+  async function cambiarEstadoPaciente(paciente) {
+    const accion = verArchivados ? "reactivar" : "archivar";
     const confirmar = window.confirm(
-      "¿Está seguro de que desea eliminar este paciente?"
+      verArchivados
+        ? `¿Deseás reactivar a ${paciente.nombre} ${paciente.apellido}?`
+        : `¿Deseás archivar a ${paciente.nombre} ${paciente.apellido}? Sus datos clínicos se conservarán.`
     );
-
     if (!confirmar) return;
 
     try {
-
       const respuesta = await apiFetch(
-        `/api/pacientes/${id}`,
-        {
-          method: "DELETE",
-        }
+        verArchivados
+          ? `/api/pacientes/${paciente.id}/reactivar`
+          : `/api/pacientes/${paciente.id}`,
+        { method: verArchivados ? "PATCH" : "DELETE" }
       );
 
-
       if (!respuesta.ok) {
-        const datos = await respuesta.json();
+        const datos = await respuesta.json().catch(() => ({}));
         console.error("Error del servidor:", datos);
-        alert("No se pudo eliminar el paciente");
+        alert(`No se pudo ${accion} el paciente`);
         return;
       }
 
-      if (pacienteSeleccionado?.id === id) {
+      if (pacienteSeleccionado?.id === paciente.id) {
         setPacienteSeleccionado(null);
       }
-
-      alert("Paciente eliminado correctamente");
-
+      alert(verArchivados ? "Paciente reactivado correctamente" : "Paciente archivado correctamente");
       await obtenerPacientes();
     } catch (error) {
-      console.error("Error al eliminar paciente:", error);
+      console.error(`Error al ${accion} paciente:`, error);
       alert("No se pudo conectar con el servidor");
     }
   }
@@ -282,12 +307,23 @@ function Pacientes() {
         </div>
 
         {!mostrarFormulario && (
-          <button
-            className="btn-pacientes btn-nuevo"
-            onClick={nuevoPaciente}
-          >
-            ＋ Nuevo paciente
-          </button>
+          <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+            <button
+              className="btn-pacientes btn-cancelar"
+              onClick={() => {
+                setVerArchivados(!verArchivados);
+                setBusqueda("");
+                setPacienteSeleccionado(null);
+              }}
+            >
+              {verArchivados ? "👥 Ver pacientes activos" : "📦 Ver archivados"}
+            </button>
+            {!verArchivados && (
+              <button className="btn-pacientes btn-nuevo" onClick={nuevoPaciente}>
+                ＋ Nuevo paciente
+              </button>
+            )}
+          </div>
         )}
 
       </div>
@@ -601,7 +637,7 @@ function Pacientes() {
         <div className="listado-encabezado">
 
           <div>
-            <h2>Listado de pacientes</h2>
+            <h2>{verArchivados ? "Pacientes archivados" : "Listado de pacientes activos"}</h2>
 
             <p>
               {pacientesFiltrados.length} paciente
@@ -612,7 +648,9 @@ function Pacientes() {
         </div>
 
 
-        {pacientesFiltrados.length === 0 ? (
+        {cargando ? (
+          <div className="sin-pacientes"><p>Cargando pacientes...</p></div>
+        ) : pacientesFiltrados.length === 0 ? (
 
           <div className="sin-pacientes">
 
@@ -717,15 +755,15 @@ function Pacientes() {
                         </button>
 
 
-                        <button
-                          className="accion editar"
-                          onClick={() =>
-                            editarPaciente(paciente)
-                          }
-                          title="Editar paciente"
-                        >
-                          ✏️
-                        </button>
+                        {!verArchivados && (
+                          <button
+                            className="accion editar"
+                            onClick={() => editarPaciente(paciente)}
+                            title="Editar paciente"
+                          >
+                            ✏️
+                          </button>
+                        )}
 
 
                         <button
@@ -762,13 +800,11 @@ function Pacientes() {
 
 
                         <button
-                          className="accion eliminar"
-                          onClick={() =>
-                            eliminarPaciente(paciente.id)
-                          }
-                          title="Eliminar paciente"
+                          className={verArchivados ? "accion editar" : "accion eliminar"}
+                          onClick={() => cambiarEstadoPaciente(paciente)}
+                          title={verArchivados ? "Reactivar paciente" : "Archivar paciente"}
                         >
-                          🗑️
+                          {verArchivados ? "♻️" : "📦"}
                         </button>
 
                       </div>

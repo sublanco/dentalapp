@@ -18,9 +18,15 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
-    // Pacientes
+    // Pacientes activos
     Route::get('/pacientes', [PacienteController::class, 'index']);
     Route::post('/pacientes', [PacienteController::class, 'store']);
+
+    // Pacientes archivados
+    Route::get('/pacientes-archivados', [PacienteController::class, 'archivados']);
+    Route::patch('/pacientes/{id}/reactivar', [PacienteController::class, 'reactivar']);
+
+    // Ficha, edición y archivado
     Route::get('/pacientes/{id}', [PacienteController::class, 'show']);
     Route::put('/pacientes/{id}', [PacienteController::class, 'update']);
     Route::delete('/pacientes/{id}', [PacienteController::class, 'destroy']);
