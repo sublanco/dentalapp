@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import { apiFetch } from "../api";
 
 function PacientePanel() {
     const { id } = useParams();
@@ -15,8 +16,8 @@ function PacientePanel() {
                 setCargando(true);
                 setError("");
 
-                const respuesta = await fetch(
-                    `http://127.0.0.1:8000/api/pacientes/${id}`
+                const respuesta = await apiFetch(
+                    `/api/pacientes/${id}`
                 );
 
                 if (!respuesta.ok) {
@@ -120,8 +121,8 @@ function PacientePanel() {
                         <strong>
                             {paciente.fecha_nacimiento
                                 ? new Date(
-                                      `${paciente.fecha_nacimiento}T00:00:00`
-                                  ).toLocaleDateString("es-AR")
+                                    `${paciente.fecha_nacimiento}T00:00:00`
+                                ).toLocaleDateString("es-AR")
                                 : "No registrada"}
                         </strong>
                     </div>
