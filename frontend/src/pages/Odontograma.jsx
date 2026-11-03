@@ -161,15 +161,7 @@ function Odontograma() {
     console.log("Cara:", cara)
     console.log("Estado:", estadoSeleccionado)
 
-    setPiezas((previas) => ({
-      ...previas,
-      [numero]: {
-        ...(previas[numero] || {}),
-        [cara]: {
-          estado: estadoSeleccionado
-        }
-      }
-    }))
+
 
     try {
 
@@ -208,6 +200,10 @@ function Odontograma() {
       console.error(
         "Error al guardar odontograma:",
         error
+      )
+
+      alert(
+        "No se pudo guardar la marca dental. Verificá la conexión e intentá nuevamente."
       )
     }
   }
@@ -256,10 +252,13 @@ function Odontograma() {
       console.log("Marca eliminada correctamente")
 
     } catch (error) {
-
       console.error(
         "Error al eliminar marca:",
         error
+      )
+
+      alert(
+        "No se pudo eliminar la marca dental. Verificá la conexión e intentá nuevamente."
       )
     }
   }

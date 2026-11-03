@@ -63,13 +63,7 @@ function Consultas() {
           return fechaB.localeCompare(fechaA);
         });
 
-      setConsultas(consultasPaciente);
-
-
-      setConsultas(consultasPaciente);
-
-
-      setConsultas(consultasPaciente);
+   setConsultas(consultasPaciente);
     } catch (error) {
       console.error(error);
       setError("No se pudieron cargar los datos.");
