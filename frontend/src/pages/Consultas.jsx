@@ -63,7 +63,7 @@ function Consultas() {
           return fechaB.localeCompare(fechaA);
         });
 
-   setConsultas(consultasPaciente);
+      setConsultas(consultasPaciente);
     } catch (error) {
       console.error(error);
       setError("No se pudieron cargar los datos.");
@@ -109,38 +109,54 @@ function Consultas() {
   }
 
   async function eliminarConsulta(consulta) {
-    const confirmar = window.confirm(
-      "¿Está segura de que desea eliminar esta consulta?"
-    );
-
-    if (!confirmar) {
+    if (consulta.anulada) {
+      alert("Esta consulta ya está anulada.");
       return;
     }
+
+    const motivo = window.prompt(
+      "Ingresá el motivo de anulación de la consulta:"
+    );
+
+    if (motivo === null) return;
+
+    if (!motivo.trim()) {
+      alert("El motivo de anulación es obligatorio.");
+      return;
+    }
+
+    const confirmar = window.confirm(
+      "¿Confirmás la anulación de esta consulta? El registro clínico se conservará."
+    );
+
+    if (!confirmar) return;
 
     try {
       const respuesta = await apiFetch(
         `/api/consultas/${consulta.id}`,
         {
           method: "DELETE",
+          body: JSON.stringify({
+            motivo_anulacion: motivo.trim(),
+          }),
         }
       );
 
       const datos = await respuesta.json();
 
       if (!respuesta.ok) {
-        console.error("Error del servidor:", datos);
-        alert("No se pudo eliminar la consulta");
+        alert(datos.mensaje || "No se pudo anular la consulta.");
         return;
       }
 
-      alert("Consulta eliminada correctamente");
-
+      alert("Consulta anulada correctamente.");
       await cargarDatos();
     } catch (error) {
-      console.error("Error al eliminar consulta:", error);
-      alert("No se pudo conectar con el servidor");
+      console.error("Error al anular consulta:", error);
+      alert("No se pudo completar la anulación.");
     }
   }
+
 
   async function guardarConsulta(e) {
     e.preventDefault();
@@ -602,23 +618,27 @@ function Consultas() {
 
                     <div className="consulta-card-acciones">
 
-                      <button
-                        className="btn-consulta-editar"
-                        onClick={() =>
-                          editarConsulta(consulta)
-                        }
-                      >
-                        ✏️ Editar
-                      </button>
 
-                      <button
-                        className="btn-consulta-eliminar"
-                        onClick={() =>
-                          eliminarConsulta(consulta)
-                        }
-                      >
-                        🗑️ Eliminar
-                      </button>
+                      {!consulta.anulada && (
+                        <button
+                          className="btn-consulta-editar"
+                          onClick={() => editarConsulta(consulta)}
+                        >
+                          ✏️ Editar
+                        </button>
+                      )}
+
+
+
+                      {!consulta.anulada && (
+                        <button
+                          className="btn-consulta-eliminar"
+                          onClick={() => eliminarConsulta(consulta)}
+                        >
+                          🚫 Anular consulta
+                        </button>
+                      )}
+
 
                     </div>
 

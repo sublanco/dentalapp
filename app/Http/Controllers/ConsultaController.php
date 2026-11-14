@@ -63,6 +63,13 @@ class ConsultaController extends Controller
     {
         $consulta = Consulta::findOrFail($id);
 
+if ($consulta->anulada) {
+    return response()->json([
+        'mensaje' => 'No se puede modificar una consulta anulada.'
+    ], 409);
+}
+
+
         $datos = $request->validate([
             'paciente_id' => 'required|exists:pacientes,id',
             'fecha_consulta' => 'required|date',
@@ -83,14 +90,32 @@ class ConsultaController extends Controller
     // ELIMINAR CONSULTA
     // =========================================
 
-    public function destroy($id)
-    {
-        $consulta = Consulta::findOrFail($id);
+   
+public function destroy(Request $request, $id)
+{
+    $consulta = Consulta::findOrFail($id);
 
-        $consulta->delete();
-
+    if ($consulta->anulada) {
         return response()->json([
-            'mensaje' => 'Consulta eliminada correctamente'
-        ]);
+            'mensaje' => 'Esta consulta ya está anulada'
+        ], 409);
     }
+
+    $datos = $request->validate([
+        'motivo_anulacion' => 'required|string|max:1000',
+    ]);
+
+    $consulta->update([
+        'anulada' => true,
+        'fecha_anulacion' => now(),
+        'motivo_anulacion' => $datos['motivo_anulacion'],
+    ]);
+
+    return response()->json([
+        'mensaje' => 'Consulta anulada correctamente',
+        'consulta' => $consulta->fresh()
+    ]);
+}
+
+
 }
