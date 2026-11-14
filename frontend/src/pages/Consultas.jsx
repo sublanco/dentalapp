@@ -586,11 +586,28 @@ function Consultas() {
 
               {consultasFiltradas.map((consulta) => (
 
+
                 <article
                   className="consulta-card-profesional"
                   key={consulta.id}
                 >
+                  {consulta.anulada && (
+                    <div className="consulta-anulada-aviso">
+                      <strong>🚫 CONSULTA ANULADA</strong>
 
+                      <p>
+                        <strong>Motivo:</strong>{" "}
+                        {consulta.motivo_anulacion || "No especificado"}
+                      </p>
+
+                      {consulta.fecha_anulacion && (
+                        <p>
+                          <strong>Fecha de anulación:</strong>{" "}
+                          {new Date(consulta.fecha_anulacion).toLocaleString("es-AR")}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   <div className="consulta-card-header">
 
                     <div className="consulta-fecha">
