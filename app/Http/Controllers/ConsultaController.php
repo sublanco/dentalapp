@@ -11,16 +11,33 @@ class ConsultaController extends Controller
     // LISTAR CONSULTAS
     // =========================================
 
-    public function index()
-    {
-        $consultas = Consulta::with('paciente')
-            ->orderBy('fecha_consulta', 'desc')
-            ->get();
 
-        return response()->json($consultas);
-    }
+public function index()
+{
+    $consultas = Consulta::with([
+        'paciente',
+        'anuladaPor:id,name'
+    ])
+        ->orderBy('fecha_consulta', 'desc')
+        ->get();
 
-    // =========================================
+    $consultas->each(function ($consulta) {
+        $responsable = $consulta->anuladaPor;
+
+        $consulta->unsetRelation('anuladaPor');
+
+        $consulta->setAttribute(
+            'usuario_anulacion',
+            $responsable ? [
+                'id' => $responsable->id,
+                'name' => $responsable->name,
+            ] : null
+        );
+    });
+
+    return response()->json($consultas);
+}
+   // =========================================
     // CREAR CONSULTA
     // =========================================
 
@@ -91,6 +108,7 @@ if ($consulta->anulada) {
     // =========================================
 
    
+
 public function destroy(Request $request, $id)
 {
     $consulta = Consulta::findOrFail($id);
@@ -109,6 +127,7 @@ public function destroy(Request $request, $id)
         'anulada' => true,
         'fecha_anulacion' => now(),
         'motivo_anulacion' => $datos['motivo_anulacion'],
+        'anulada_por' => $request->user()->id,
     ]);
 
     return response()->json([
@@ -116,6 +135,7 @@ public function destroy(Request $request, $id)
         'consulta' => $consulta->fresh()
     ]);
 }
+
 
 
 }

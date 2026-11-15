@@ -17,6 +17,7 @@ class Consulta extends Model
         'anulada',
         'fecha_anulacion',
         'motivo_anulacion',
+        'anulada_por',
     ];
 
     protected $casts = [
@@ -27,5 +28,10 @@ class Consulta extends Model
     public function paciente(): BelongsTo
     {
         return $this->belongsTo(Paciente::class);
+    }
+
+    public function anuladaPor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'anulada_por');
     }
 }

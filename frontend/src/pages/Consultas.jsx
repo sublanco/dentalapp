@@ -600,6 +600,14 @@ function Consultas() {
                         {consulta.motivo_anulacion || "No especificado"}
                       </p>
 
+                      {consulta.usuario_anulacion?.name && (
+                        <p>
+                          <strong>Anulada por:</strong>{" "}
+                          {consulta.usuario_anulacion.name}
+                        </p>
+                      )}
+
+
                       {consulta.fecha_anulacion && (
                         <p>
                           <strong>Fecha de anulación:</strong>{" "}
